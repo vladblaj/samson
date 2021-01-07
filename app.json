@@ -1,0 +1,12 @@
+{
+  "name": "samson",
+  "displayName": "samson",
+  "expo": {
+    "name": "samson",
+    "slug": "samson",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
