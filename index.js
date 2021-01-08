@@ -2,15 +2,14 @@ import {registerRootComponent} from 'expo';
 
 import React from "react";
 import App from "./App";
-import { store } from './store/appStore';
-import {Provider} from 'react-redux';
 import {Root} from "native-base";
+import SamsonContext from "./store/appStore";
 
 const RootApp = () => (
     <Root>
-      <Provider store={store}>
+      <SamsonContext>
         <App/>
-      </Provider>
+      </SamsonContext>
     </Root>
 );
 

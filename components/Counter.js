@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Body, Button, Card, CardItem, Container, Content, Header, Text, Title} from 'native-base';
-import {decrement, increment} from '../actions';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import {SamsonContext} from '../store/appStore';
 
 const Counter = props => {
+  const {store, actions} = useContext(SamsonContext);
+
+  const getStoreCount = () => {
+    console.log(store.count);
+    return store.count;
+  }
 
   return (
       <Container>
@@ -17,14 +21,14 @@ const Counter = props => {
           <Card>
             <CardItem>
               <Text>
-                {props.count}
+                {getStoreCount()}
               </Text>
             </CardItem>
           </Card>
-          <Button dark bordered onPress={() => props.increment()}>
+          <Button dark bordered onPress={() => actions.increment()}>
             <Text>Increment</Text>
           </Button>
-          <Button dark bordered onPress={() => props.decrement()}>
+          <Button dark bordered onPress={() => actions.decrement()}>
             <Text>Decrement</Text>
           </Button>
         </Content>
@@ -32,14 +36,4 @@ const Counter = props => {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    count: state.count
-  };
-}
-
-function matchDispatchToProps(dispatch) {
-  return bindActionCreators({increment: increment, decrement: decrement}, dispatch)
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(Counter);
+export default Counter;
