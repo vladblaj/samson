@@ -1,8 +1,17 @@
-import { registerRootComponent } from 'expo';
+import {registerRootComponent} from 'expo';
 
-import App from './App';
+import React from "react";
+import App from "./App";
+import { store } from './store/appStore';
+import {Provider} from 'react-redux';
+import {Root} from "native-base";
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in the Expo client or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+const RootApp = () => (
+    <Root>
+      <Provider store={store}>
+        <App/>
+      </Provider>
+    </Root>
+);
+
+registerRootComponent(RootApp);
