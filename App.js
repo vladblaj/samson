@@ -1,15 +1,29 @@
 import {StatusBar} from 'expo-status-bar';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import CircumstantialMusic from "./components/CircumstantialMusic";
-import {Root, Body, Button, Container, Content, Footer, FooterTab, Header, Icon, Left, Right, Text, Title} from 'native-base';
-import Counter from "./components/Counter";
+import {
+  Body,
+  Button,
+  Container,
+  Content,
+  Footer,
+  FooterTab,
+  Header,
+  Icon,
+  Left,
+  Right,
+  Root,
+  Text,
+  Title,
+  View
+} from 'native-base';
+import Player from "./components/Player";
 
 export default function App() {
-
   return (
       <Root>
-        <Container>
+        <Container style={styles.container}>
           <Header>
             <Left>
               <Button transparent>
@@ -22,23 +36,21 @@ export default function App() {
             <Right/>
           </Header>
           <Content>
-            <View style={styles.container}>
-              <Counter/>
+
+            <View>
               <Text>Sa ma beau</Text>
               <View style={styles.upperModule}>
                 <CircumstantialMusic/>
               </View>
+              <Player/>
               <View style={styles.lowerModule}>
-                <Text>Partea di gios</Text>
               </View>
               <StatusBar style="auto"/>
             </View>
           </Content>
-          <Footer>
+          <Footer style={styles.footer}>
             <FooterTab>
-              <Button full>
-                <Text>Footer</Text>
-              </Button>
+
             </FooterTab>
           </Footer>
         </Container>
@@ -57,6 +69,9 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexBasis: 0,
     backgroundColor: '#14e930'
+  },
+  footer: {
+    height: '18%',
   },
   container: {
     flex: 1,
