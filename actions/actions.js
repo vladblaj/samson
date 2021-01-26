@@ -1,14 +1,14 @@
-import {DECREMENT, INCREMENT} from "../reducers/reducer";
+import {SET_FIELD_VALUE, TOGGLE} from "../reducers/actionConstants";
 
 export const useActions = (state, dispatch) => ({
-  increment: data =>
-      dispatch({
-        type: INCREMENT,
-        payload: data}),
-
-  decrement: data =>
-      dispatch({
-        type: DECREMENT,
-        payload: data,
-      }),
+  toggle: data =>{
+    dispatch({
+      type: TOGGLE,
+      payload: data})
+  },
+  setFieldValue: data =>{
+    dispatch({
+      type: SET_FIELD_VALUE,
+      payload: data})
+  }
 });

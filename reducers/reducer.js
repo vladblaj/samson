@@ -1,6 +1,13 @@
 //Define your initialState
+import {SET_FIELD_VALUE, TOGGLE} from "./actionConstants";
+
 export const initialState = {
   count: 0,
+  paused: false,
+  selectedTrack: '2-aWEYezEMk',
+  repeatOn: false,
+  shuffleOn: false,
+
   tracks: [{
     title: 'E figuranta',
     artist: 'Florin Salam',
@@ -8,15 +15,13 @@ export const initialState = {
     audioUrl: "https://www.youtube.com/watch?v=NHHT_K4bTTs&ab_channel=NekMusicTv",
   }]
 }
-export const INCREMENT = 'INCREMENT';
-export const DECREMENT = 'DECREMENT';
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case INCREMENT:
-      //return {...state, loading: action.payload};
-      return {...state, count: state.count + 1};
-    case DECREMENT:
-      return {...state, count: state.count - 1};
+    case SET_FIELD_VALUE:
+      return {...state, [action.payload.name]: action.payload.value};
+    case TOGGLE:
+      return {...state, [action.payload.name]: !state[action.payload.name]};
     default:
       return state;
   }
