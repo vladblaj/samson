@@ -1,23 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import CellElement from "./CellElement";
+import {SamsonContext} from "../store/appStore";
 
 const CircumstantialMusic = props => {
+  const {store, actions} = useContext(SamsonContext);
 
   return (
       <View style={styles.container}>
-        <CellElement value={'1.'}/>
-        <CellElement value={'2.'}/>
-        <CellElement value={'3.'}/>
-        <CellElement value={'4.'}/>
-        <CellElement value={'5.'}/>
-        <CellElement value={'6.'}/>
-        <CellElement value={'7.'}/>
-        <CellElement value={'8.'}/>
-        <CellElement value={'9.'}/>
-        <CellElement value={'10.'}/>
-        <CellElement value={'11.'}/>
-        <CellElement value={'12.'}/>
+        {[...Array(12).keys()].map(function(id){
+          const title =  store.tracks && store.tracks[id]? store.tracks[id].snippet.title : '';
+          return  <CellElement id={id} value={title}/>;
+        })}
       </View>
   );
 }

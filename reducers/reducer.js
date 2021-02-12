@@ -1,19 +1,23 @@
 //Define your initialState
-import {SET_FIELD_VALUE, TOGGLE} from "./actionConstants";
+import {
+  ADD_TO_CIRCUMSTANTIAL_MUSIC,
+  PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
+  SET_FIELD_VALUE, SET_PLAYER_REF,
+  SET_SELECTED_CIRCUMSTANTIAL_CELL,
+  TOGGLE
+} from "./actionConstants";
 
 export const initialState = {
+  searchOverlay: false,
   count: 0,
-  paused: false,
+  paused: true,
+  duration: 0,
   selectedTrack: '2-aWEYezEMk',
   repeatOn: false,
   shuffleOn: false,
-
-  tracks: [{
-    title: 'E figuranta',
-    artist: 'Florin Salam',
-    albumArtUrl: "http://36.media.tumblr.com/14e9a12cd4dca7a3c3c4fe178b607d27/tumblr_nlott6SmIh1ta3rfmo1_1280.jpg",
-    audioUrl: "https://www.youtube.com/watch?v=NHHT_K4bTTs&ab_channel=NekMusicTv",
-  }]
+  selectedCircumstantialCell: 0,
+  tracks: {},
+  playerRef: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -22,6 +26,19 @@ const reducer = (state = initialState, action) => {
       return {...state, [action.payload.name]: action.payload.value};
     case TOGGLE:
       return {...state, [action.payload.name]: !state[action.payload.name]};
+    case ADD_TO_CIRCUMSTANTIAL_MUSIC:
+      return {...state, tracks: {...state.tracks, [state.selectedCircumstantialCell]: action.payload}};
+    case SET_SELECTED_CIRCUMSTANTIAL_CELL:
+      return {...state, selectedCircumstantialCell: action.payload.id};
+    case PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO: {
+      if (state.tracks[state.selectedCircumstantialCell]) {
+        return {...state, selectedTrack: state.tracks[state.selectedCircumstantialCell].id.videoId, paused: false};
+      }
+      return state;
+    }
+    case 'VLAD': {
+      return {...state, playerRef: action.payload};
+    }
     default:
       return state;
   }
