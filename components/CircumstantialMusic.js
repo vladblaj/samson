@@ -10,7 +10,7 @@ const CircumstantialMusic = props => {
       <View style={styles.container}>
         {[...Array(12).keys()].map(function(id){
           const title =  store.tracks && store.tracks[id]? store.tracks[id].snippet.title : '';
-          return  <CellElement id={id} value={title}/>;
+          return  <CellElement key = {id} id={id} value={title}/>;
         })}
       </View>
   );

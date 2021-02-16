@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/slider": "^3.0.3",
     "axios": "^0.21.1",
     "expo": "~40.0.0",
     "expo-splash-screen": "~0.8.0",
@@ -17,8 +18,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
+    "react-native-animated-hide-view": "^1.0.0",
     "react-native-gesture-handler": "^1.8.0",
-    "react-native-movable-view": "^1.0.3",
     "react-native-reanimated": "~1.13.0",
     "react-native-screens": "~2.15.0",
     "react-native-slider": "^0.11.0",

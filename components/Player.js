@@ -10,31 +10,43 @@ import {SamsonContext} from "../store/appStore";
 const Player = (props) => {
   const {store, actions} = useContext(SamsonContext);
   const [currentPosition, setCurrentPosition] = useState(0);
+  const [timer, setTimer] = useState(0);
   const playerRef = props.ytFrameRef;
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const fetchData = async () => {
-        if (playerRef && playerRef.current.getCurrentTime) {
-          playerRef.current.getCurrentTime().then(
-              currentTime => {
-                setCurrentPosition(Math.floor(currentTime));
-              }
-          );
-        }
-      }
-      fetchData().then();
+  const fetchCurrentTime = async () => {
+    if (playerRef && playerRef.current.getCurrentTime) {
+      playerRef.current.getCurrentTime().then(
+          currentTime => {
+            console.log(currentTime);
+            setCurrentPosition(Math.floor(currentTime));
+            true;
+          }
+      );
+    }
+  }
+
+  const startFetchingCurrentTime = () => {
+    clearInterval(timer);
+    const timerVar = setInterval(() => {
+      fetchCurrentTime().then();
     }, 500);
+    setTimer(timerVar);
+  }
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [props.ytFrameRef]);
+  const stopFetchingCurrentTime = () => {
+    clearInterval(timer);
+  }
 
+  useEffect(() => {
+    if (!store.paused) {
+      startFetchingCurrentTime();
+    }
+  }, [store.selectedTrack, store.paused])
   const seek = (time) => {
     time = Math.round(time);
     setCurrentPosition(Math.floor(time));
     actions.setFieldValue({name: 'paused', value: false});
+    console.log(time);
     playerRef.current.seekTo(time);
   }
 
@@ -62,6 +74,12 @@ const Player = (props) => {
 
   const onPressPlay = () => {
     actions.setFieldValue({name: 'paused', value: false});
+    startFetchingCurrentTime();
+  }
+
+  const onPressPause = () => {
+    actions.setFieldValue({name: 'paused', value: true});
+    stopFetchingCurrentTime();
   }
 
   return (
@@ -83,7 +101,7 @@ const Player = (props) => {
             forwardDisabled={true}
             onPressShuffle={() => actions.toggle({name: 'shuffleOn'})}
             onPressPlay={onPressPlay}
-            onPressPause={() => actions.setFieldValue({name: 'paused', value: true})}
+            onPressPause={onPressPause}
             onBack={onBack}
             onForward={onForward}
             paused={store.paused}/>

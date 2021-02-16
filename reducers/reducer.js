@@ -2,7 +2,7 @@
 import {
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
   PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
-  SET_FIELD_VALUE, SET_PLAYER_REF,
+  SET_FIELD_VALUE,
   SET_SELECTED_CIRCUMSTANTIAL_CELL,
   TOGGLE
 } from "./actionConstants";
@@ -17,7 +17,8 @@ export const initialState = {
   shuffleOn: false,
   selectedCircumstantialCell: 0,
   tracks: {},
-  playerRef: null
+  playerRef: null,
+  isYoutubeVisible: true
 }
 
 const reducer = (state = initialState, action) => {
@@ -31,8 +32,13 @@ const reducer = (state = initialState, action) => {
     case SET_SELECTED_CIRCUMSTANTIAL_CELL:
       return {...state, selectedCircumstantialCell: action.payload.id};
     case PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO: {
-      if (state.tracks[state.selectedCircumstantialCell]) {
-        return {...state, selectedTrack: state.tracks[state.selectedCircumstantialCell].id.videoId, paused: false};
+      if (state.tracks[state.selectedCircumstantialCell] && action.payload.id) {
+        return {
+          ...state,
+          selectedTrack: state.tracks[action.payload.id].id.videoId,
+          selectedCircumstantialCell: action.payload.id,
+          paused: false
+        };
       }
       return state;
     }

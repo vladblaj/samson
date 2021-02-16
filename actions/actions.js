@@ -40,6 +40,7 @@ export const useActions = (state, dispatch) => ({
       playSelectedCircumstantialVideo: data => {
         dispatch({
           type: PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
+          payload: data
         })
       },
       toVlad: data => {

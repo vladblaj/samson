@@ -11,7 +11,8 @@ const CellElement = props => {
     actions.setSelectedCircumstantialCell({id: props.id})
   };
   const playSelectedSong = () => {
-    actions.playSelectedCircumstantialVideo()
+    actions.setSelectedCircumstantialCell({id: props.id})
+    actions.playSelectedCircumstantialVideo({id: props.id})
   }
   const {value} = props;
 
@@ -19,9 +20,8 @@ const CellElement = props => {
       <View style={styles.container}>
         <TouchableHighlight
             onPress={playSelectedSong}
-            onLongPress={toggleOverlay}
-        >
-          <Title numberOfLines={3} on>{value}</Title>
+            onLongPress={toggleOverlay}>
+          <Title numberOfLines={1} style={{fontSize: 12, color: 'white'}} on>{value}</Title>
         </TouchableHighlight>
       </View>
   );
@@ -29,13 +29,14 @@ const CellElement = props => {
 const styles = StyleSheet.create({
   text: {margin: 6},
   container: {
+    backgroundColor: 'rgb(33,33,33)',
     flexBasis: 0,
     flexGrow: 1,
     margin: 2,
     minWidth: '25%',
-    borderRadius: 3,
+    borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#c8e1ff',
+    borderColor: 'rgb(33,33,33)'
   }
 });
 export default CellElement;

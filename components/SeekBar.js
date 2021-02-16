@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import Slider from 'react-native-slider';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
-  TouchableOpacity,
 } from 'react-native';
+import Slider from "@react-native-community/slider";
 
 function pad(n, width, z=0) {
   n = n + '';
@@ -55,7 +53,7 @@ export default SeekBar;
 
 const styles = StyleSheet.create({
   slider: {
-    marginTop: -12,
+    transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }],
   },
   container: {
     paddingLeft: 16,
