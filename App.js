@@ -1,7 +1,8 @@
 import {StatusBar} from 'expo-status-bar';
-import React, {useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import CircumstantialMusic from "./components/CircumstantialMusic";
+import actions from './actions/actions'
+import YoutubeMovable from './components/youtube-search/YoutubeMovable'
 import {
   Body,
   Button,
@@ -17,15 +18,15 @@ import {
   Title,
   View
 } from 'native-base';
-import Player from "./components/Player";
 import Overlay from "./components/Overlay";
-import {SamsonContext} from "./store/appStore";
-import YoutubeMovable from "./components/youtube-search/YoutubeMovable";
+import {useDispatch, useSelector} from "react-redux";
+import CircumstantialMusic from "./components/CircumstantialMusic";
+import Player from "./components/Player";
 
 export default function App() {
-  const {store, actions} = useContext(SamsonContext);
+  const store = useSelector(state => state)
+  const dispatch = useDispatch()
   const ytFrameRef = useRef();
-
   return (
       <Root>
         <Container style={styles.container}>
@@ -40,9 +41,10 @@ export default function App() {
             </Body>
             <Right>
               <TouchableOpacity style={styles.maximize} onPress={() => {
-                actions.setFieldValue({name: 'isYoutubeVisible', value: true});
+                dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: true}));
               }}>
-                <Image source={require('../samson/img/baseline_ondemand_video_black_18dp.png')} style={styles.minimizeImage}/>
+                <Image source={require('../samson/img/baseline_ondemand_video_black_18dp.png')}
+                       style={styles.maximizeImage}/>
               </TouchableOpacity>
             </Right>
           </Header>
@@ -59,7 +61,7 @@ export default function App() {
           </Content>
           <Footer style={styles.footer}>
             <FooterTab>
-              <Player ytFrameRef={ytFrameRef}/>
+               <Player ytFrameRef={ytFrameRef}/>
             </FooterTab>
           </Footer>
           {
@@ -98,8 +100,14 @@ const styles = StyleSheet.create({
   maximize: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 40, height: 40,
+    width: 28, height: 28,
     backgroundColor: 'rgb(25,118,209)',
     borderRadius: 3
+  },
+  maximizeImage: {
+    right: 0,
+    borderRadius: 3,
+    width: 25, height: 25,
+    backgroundColor: 'rgb(25,118,209)',
   }
 });

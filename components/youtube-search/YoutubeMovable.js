@@ -1,26 +1,22 @@
-import {View} from "native-base";
 import YoutubePlayer from "react-native-youtube-iframe";
-import React, {useContext, useEffect} from 'react';
-import {SamsonContext} from "../../store/appStore";
+import React, {useEffect} from 'react';
 import MovableView from "../MovableView";
 import {useState} from "reinspect";
 import {Image, StyleSheet, TouchableOpacity} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import actions from "../../actions/actions";
 
 const YoutubeMovable = props => {
-  const {store, actions} = useContext(SamsonContext);
+  const store = useSelector(state => state);
+  const dispatch = useDispatch();
   const [playerState, setPlayerState] = useState();
 
   useEffect(() => {
-    if (playerState === 'ready' && store.paused === false) {
-      props.ytFrameRef.current.seekTo(0);
-    }
-
     if (playerState === 'playing') {
       if (props.ytFrameRef && props.ytFrameRef.current.getDuration()) {
         props.ytFrameRef.current.getDuration().then(
             currentDuration => {
-              console.log({currentDuration});
-              actions.setFieldValue({name: 'duration', value: Math.floor(currentDuration)});
+              dispatch(actions.setFieldValue({name: 'duration', value: Math.floor(currentDuration)}));
             }
         );
       }
@@ -29,11 +25,15 @@ const YoutubeMovable = props => {
   }, [playerState, store.selectedTrack, store.paused])
 
   const setDurationOnStateChange = (event) => {
+    if (event === 'ended' && store.paused === false) {
+      props.ytFrameRef.current.seekTo(0);
+      dispatch(actions.toggle({name: 'paused'}));
+    }
     setPlayerState(event);
 
   }
   const minimize = () => {
-    actions.setFieldValue({name: 'isYoutubeVisible', value: false});
+    dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: false}));
   }
   return (
       <MovableView isVisible={store.isYoutubeVisible}>
@@ -48,7 +48,7 @@ const YoutubeMovable = props => {
             play={!store.paused}
             videoId={store.selectedTrack}
         />
-        <TouchableOpacity style={styles.minimize} onPress = {minimize} >
+        <TouchableOpacity style={styles.minimize} onPress={minimize}>
           <Image source={require('../../img/baseline_minimize_black_18dp.png')} style={styles.minimizeImage}/>
         </TouchableOpacity>
       </MovableView>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   minimizeImage: {
     right: 0,
     borderRadius: 3,
-    width: 20, height: 20,
+    width: 18, height: 18,
     backgroundColor: 'rgb(25,118,209)',
   }
 });

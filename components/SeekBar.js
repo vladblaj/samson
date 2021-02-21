@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import {StyleSheet, Text, View,} from 'react-native';
 import Slider from "@react-native-community/slider";
 
-function pad(n, width, z=0) {
+function pad(n, width, z = 0) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
@@ -19,8 +15,9 @@ const minutesAndSeconds = (position) => ([
 const SeekBar = ({
   trackLength,
   currentPosition,
-  onSeek,
+  onSlidingComplete,
   onSlidingStart,
+  onValueChange
 }) => {
   const elapsed = minutesAndSeconds(currentPosition);
   const remaining = minutesAndSeconds(trackLength - currentPosition);
@@ -30,7 +27,7 @@ const SeekBar = ({
           <Text style={styles.text}>
             {elapsed[0] + ":" + elapsed[1]}
           </Text>
-          <View style={{flex: 1}} />
+          <View style={{flex: 1}}/>
           <Text style={[styles.text, {width: 40}]}>
             {trackLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
           </Text>
@@ -38,7 +35,8 @@ const SeekBar = ({
         <Slider
             maximumValue={Math.max(trackLength, 1, currentPosition + 1)}
             onSlidingStart={onSlidingStart}
-            onSlidingComplete={onSeek}
+            onSlidingComplete={onSlidingComplete}
+            onValueChange={onValueChange}
             value={currentPosition}
             style={styles.slider}
             minimumTrackTintColor='#fff'
@@ -53,7 +51,7 @@ export default SeekBar;
 
 const styles = StyleSheet.create({
   slider: {
-    transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }],
+    transform: [{scaleX: 0.9}, {scaleY: 0.9}],
   },
   container: {
     paddingLeft: 16,
@@ -73,6 +71,6 @@ const styles = StyleSheet.create({
   text: {
     color: 'rgba(255, 255, 255, 0.72)',
     fontSize: 12,
-    textAlign:'center',
+    textAlign: 'center',
   }
 });

@@ -1,18 +1,18 @@
-import React, {useContext} from 'react';
+import React  from 'react';
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
-import {SamsonContext} from "../store/appStore";
 import {Title} from "native-base";
-
+import {useDispatch} from "react-redux";
+import actions from "../actions/actions";
 const CellElement = props => {
-  const {actions} = useContext(SamsonContext);
+  const dispatch = useDispatch();
 
   const toggleOverlay = () => {
-    actions.toggle({name: 'searchOverlay'})
-    actions.setSelectedCircumstantialCell({id: props.id})
+    dispatch(actions.toggle({name: 'searchOverlay'}));
+    dispatch(actions.setSelectedCircumstantialCell({id: props.id}));
   };
   const playSelectedSong = () => {
-    actions.setSelectedCircumstantialCell({id: props.id})
-    actions.playSelectedCircumstantialVideo({id: props.id})
+    dispatch(actions.setSelectedCircumstantialCell({id: props.id}))
+    dispatch(actions.playSelectedCircumstantialVideo({id: props.id}))
   }
   const {value} = props;
 

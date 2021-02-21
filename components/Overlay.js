@@ -1,17 +1,17 @@
-import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity,TouchableHighlight, View} from 'react-native';
-import {SamsonContext} from "../store/appStore";
+import React from 'react';
+import {StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
 import YoutubeSearch from "./youtube-search/YoutubeSearch";
-
-const Overlay = props => {
-  const {actions} = useContext(SamsonContext);
+import {useDispatch} from "react-redux";
+import actions from "../actions/actions";
+const Overlay = () => {
+  const dispatch = useDispatch();
 
   const toggleOverlay = () => {
-    actions.toggle({name: 'searchOverlay'})
+    dispatch(actions.toggle({name: 'searchOverlay'}))
   };
   return (
       <TouchableOpacity
-          onPress={toggleOverlay} style={styles.container} >
+          onPress={toggleOverlay} style={styles.container}>
         <TouchableHighlight style={styles.overlay}>
           <YoutubeSearch/>
         </TouchableHighlight>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor:'rgba(0, 0, 0, 0.6)'
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
   },
   overlay: {
     flex: 1,

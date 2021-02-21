@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
     case SET_SELECTED_CIRCUMSTANTIAL_CELL:
       return {...state, selectedCircumstantialCell: action.payload.id};
     case PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO: {
-      if (state.tracks[state.selectedCircumstantialCell] && action.payload.id) {
+      if (state.tracks[state.selectedCircumstantialCell] && action.payload.id!==undefined) {
         return {
           ...state,
           selectedTrack: state.tracks[action.payload.id].id.videoId,

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Animated, StyleSheet, Text, View,} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import YoutubePlayer from "react-native-youtube-iframe";
-import {SamsonContext} from "../store/appStore";
+import {SamsonContext} from "../store/SamsonContextProvider";
 import {useState} from "reinspect";
 
 let dropzoneHeight = 200;

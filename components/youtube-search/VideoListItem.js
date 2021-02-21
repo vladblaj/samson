@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {ListItem, Title, View} from "native-base";
 import {Image, StyleSheet, Text} from "react-native";
-import {SamsonContext} from "../../store/appStore";
 
 const VideoListItem = ({video, onVideoSelect}) => {
 

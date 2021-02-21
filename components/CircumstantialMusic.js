@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import CellElement from "./CellElement";
-import {SamsonContext} from "../store/appStore";
+import { useSelector} from "react-redux";
 
-const CircumstantialMusic = props => {
-  const {store, actions} = useContext(SamsonContext);
+const CircumstantialMusic = () => {
+  const store = useSelector(state => state)
 
   return (
       <View style={styles.container}>
