@@ -5,6 +5,7 @@ import {useState} from "reinspect";
 import {Image, StyleSheet, TouchableOpacity} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
+import {View} from "native-base";
 
 const YoutubeMovable = props => {
   const store = useSelector(state => state);
@@ -32,25 +33,32 @@ const YoutubeMovable = props => {
     setPlayerState(event);
 
   }
-  const minimize = () => {
+  const minimize = (e) => {
     dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: false}));
+    e.stopPropagation();
   }
   return (
       <MovableView isVisible={store.isYoutubeVisible}>
-        <YoutubePlayer
-            onChangeState={setDurationOnStateChange}
-            onReady={() => {
-              props.ytFrameRef.current.seekTo(0);
-            }}
-            ref={props.ytFrameRef}
-            height={400}
-            width={400}
-            play={!store.paused}
-            videoId={store.selectedTrack}
-        />
-        <TouchableOpacity style={styles.minimize} onPress={minimize}>
-          <Image source={require('../../img/baseline_minimize_black_18dp.png')} style={styles.minimizeImage}/>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.minimize} onPress={minimize}>
+            <Image source={require('../../img/baseline_minimize_black_18dp.png')} style={styles.minimizeImage}
+                   onPress={minimize}/>
+          </TouchableOpacity>
+          <View pointerEvents="none">
+            <YoutubePlayer
+                onChangeState={setDurationOnStateChange}
+                onReady={() => {
+                  props.ytFrameRef.current.seekTo(0);
+                }}
+                ref={props.ytFrameRef}
+                height={230}
+                width={400}
+                play={!store.paused}
+                videoId={store.selectedTrack}
+                initialPlayerParams={{controls: 0}}
+            />
+          </View>
+        </View>
       </MovableView>
   );
 }
@@ -58,12 +66,12 @@ export default YoutubeMovable;
 const styles = StyleSheet.create({
   minimize: {
     position: 'absolute',
-    zIndex: 1
+    zIndex: 1,
   },
   minimizeImage: {
     right: 0,
     borderRadius: 3,
-    width: 18, height: 18,
+    width: 25, height: 25,
     backgroundColor: 'rgb(25,118,209)',
   }
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import reducer from '../reducers/reducer';
 import {persistReducer, persistStore} from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {applyMiddleware, createStore} from "redux"; // defaults to localStorage for web
+import {applyMiddleware, compose, createStore} from "redux"; // defaults to localStorage for web
 import {PersistGate} from 'redux-persist/integration/react'
 import {Provider} from 'react-redux'
 import thunk from "redux-thunk";

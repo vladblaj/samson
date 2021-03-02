@@ -1,7 +1,7 @@
 import {
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
   PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
-  SET_FIELD_VALUE,
+  SET_FIELD_VALUE, SET_MEETING_DATA,
   SET_SELECTED_CIRCUMSTANTIAL_CELL,
   TOGGLE
 } from "../reducers/actionConstants";
@@ -42,6 +42,15 @@ const playSelectedCircumstantialVideo = (data) => async dispatch => {
     payload: data
   })
 }
+
+const setMeetingData = (data) => async dispatch => {
+  dispatch({
+    type: SET_MEETING_DATA,
+    payload: data
+  })
+}
+
+
 const toVlad = data => {
   dispatch({
     type: 'VLAD',
@@ -55,5 +64,6 @@ export default {
   addToCircumstantialMusic,
   setSelectedCircumstantialCell,
   playSelectedCircumstantialVideo,
+  setMeetingData,
   toVlad
 }

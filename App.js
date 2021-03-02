@@ -38,6 +38,7 @@ export default function App() {
             </Left>
             <Body>
               <Title style={{color: 'white'}}>Samson</Title>
+
             </Body>
             <Right>
               <TouchableOpacity style={styles.maximize} onPress={() => {
@@ -49,19 +50,17 @@ export default function App() {
             </Right>
           </Header>
           <Content scrollEnabled={false} style={styles.content}>
-            <View>
-              <View style={styles.upperModule}>
-                <CircumstantialMusic/>
-                <YoutubeMovable ytFrameRef={ytFrameRef}/>
-              </View>
-              <View style={styles.lowerModule}>
-              </View>
-              <StatusBar style="auto"/>
+            <View style={styles.upperModule}>
+              <CircumstantialMusic/>
             </View>
+            <View style={styles.lowerModule}>
+              <YoutubeMovable ytFrameRef={ytFrameRef}/>
+            </View>
+            <StatusBar style="auto"/>
           </Content>
           <Footer style={styles.footer}>
             <FooterTab>
-               <Player ytFrameRef={ytFrameRef}/>
+              <Player ytFrameRef={ytFrameRef}/>
             </FooterTab>
           </Footer>
           {
@@ -103,6 +102,10 @@ const styles = StyleSheet.create({
     width: 28, height: 28,
     backgroundColor: 'rgb(25,118,209)',
     borderRadius: 3
+  },
+  ytFrame: {
+    zIndex: 10,
+    position: 'absolute'
   },
   maximizeImage: {
     right: 0,
