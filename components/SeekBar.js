@@ -28,7 +28,7 @@ const SeekBar = ({
             {elapsed[0] + ":" + elapsed[1]}
           </Text>
           <View style={{flex: 1}}/>
-          <Text style={[styles.text, {width: 40}]}>
+          <Text style={[styles.text, {width: 50}]}>
             {trackLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
           </Text>
         </View>
@@ -72,5 +72,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.72)',
     fontSize: 12,
     textAlign: 'center',
+
   }
 });

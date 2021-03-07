@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    flex: 1
+    flex: 1,
+    zIndex: 10
   },
   text: {margin: 6},
 });

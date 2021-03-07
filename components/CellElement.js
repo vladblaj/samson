@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     minWidth: '25%',
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: 'rgb(33,33,33)'
+    borderColor: 'rgb(33,33,33)',
   }
 });
 export default CellElement;

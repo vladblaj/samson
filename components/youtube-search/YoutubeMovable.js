@@ -39,7 +39,6 @@ const YoutubeMovable = props => {
   }
   return (
       <MovableView isVisible={store.isYoutubeVisible}>
-        <View>
           <TouchableOpacity style={styles.minimize} onPress={minimize}>
             <Image source={require('../../img/baseline_minimize_black_18dp.png')} style={styles.minimizeImage}
                    onPress={minimize}/>
@@ -58,7 +57,6 @@ const YoutubeMovable = props => {
                 initialPlayerParams={{controls: 0}}
             />
           </View>
-        </View>
       </MovableView>
   );
 }

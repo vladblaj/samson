@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Animated, Image, PanResponder, StyleSheet,TouchableOpacity,Button} from 'react-native';
+import {Animated, PanResponder, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {useState} from "reinspect";
 import AnimatedHideView from "react-native-animated-hide-view";
@@ -22,7 +22,7 @@ const MovableView = props => {
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => {
-      const { dx, dy } = gestureState
+      const {dx, dy} = gestureState
       return dx > 2 || dx < -2 || dy > 2 || dy < -2
     },
     onPanResponderGrant: () => {
@@ -51,18 +51,14 @@ const MovableView = props => {
     console.log('aaaaaaa');
   }
 
-  return (
-      <AnimatedHideView
-          visible={props.isVisible}>
-      <Animated.View
-          {...panResponder.panHandlers}
-          style={[props.style, pan.getLayout()]}
-      >
-        {props.children}
-      </Animated.View>
-      </AnimatedHideView>
-  );
-
+  return <Animated.View
+      {...panResponder.panHandlers}
+      style={[styles.container, props.style, pan.getLayout()]}>
+    <AnimatedHideView
+        visible={props.isVisible} style={styles.container}>
+      {props.children}
+    </AnimatedHideView>
+  </Animated.View>
 }
 export default MovableView;
 MovableView.propTypes = {

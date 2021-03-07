@@ -22,6 +22,7 @@ import Overlay from "./components/Overlay";
 import {useDispatch, useSelector} from "react-redux";
 import CircumstantialMusic from "./components/CircumstantialMusic";
 import Player from "./components/Player";
+import Meeting from "./components/meeting/Meeting";
 
 export default function App() {
   const store = useSelector(state => state)
@@ -49,12 +50,14 @@ export default function App() {
               </TouchableOpacity>
             </Right>
           </Header>
+
           <Content scrollEnabled={false} style={styles.content}>
+
             <View style={styles.upperModule}>
-              <CircumstantialMusic/>
-            </View>
-            <View style={styles.lowerModule}>
               <YoutubeMovable ytFrameRef={ytFrameRef}/>
+              <CircumstantialMusic/>
+              <Meeting id={1} data={store.meetings[1] ? store.meetings[1] : []}/>
+
             </View>
             <StatusBar style="auto"/>
           </Content>
@@ -66,6 +69,7 @@ export default function App() {
           {
             store.searchOverlay && <Overlay/>
           }
+
         </Container>
 
       </Root>
