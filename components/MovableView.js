@@ -61,6 +61,22 @@ const MovableView = props => {
   </Animated.View>
 }
 export default MovableView;
+
+const styles = StyleSheet.create({
+  container: {
+    zIndex: 100,
+    position: 'absolute',
+  },
+  minimize: {
+    zIndex: 1,
+  },
+  minimizeImage: {
+    right: 0,
+    borderRadius: 3,
+    width: 25, height: 25,
+    backgroundColor: 'rgb(25,118,209)',
+  }
+})
 MovableView.propTypes = {
   onDragStart: PropTypes.func,
   onDragEnd: PropTypes.func,
