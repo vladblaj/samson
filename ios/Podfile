@@ -23,4 +23,6 @@ target 'samson' do
   #  end
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
 
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
 end

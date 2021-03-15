@@ -37,7 +37,7 @@ const VideoListItem = ({video, onVideoSelect}) => {
           </View>
           <View style={styles.mediaBody}>
             <View style={styles.mediaTitle}>
-              <Title numberOfLines={3} style={styles.title}>{video.snippet.title}</Title>
+              <Title numberOfLines={4} style={styles.title}>{video.snippet.title}</Title>
             </View>
             <View style={styles.mediaChannelTitle}>
               <Text style={styles.textDetails}>{video.snippet.channelTitle}</Text>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   mediaBody: {
     flex: 1,
     flexDirection: 'column',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
   },
   mediaTitle: {
     margin: 5,

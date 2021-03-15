@@ -5,7 +5,7 @@ import {
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   SET_SELECTED_CIRCUMSTANTIAL_CELL,
-  TOGGLE
+  TOGGLE, TOGGLE_OVERLAY
 } from "./actionConstants";
 
 const mockItem = {
@@ -49,15 +49,24 @@ function getColor(i) {
   const colorVal = i * multiplier;
   return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
 }
+const generateMeetingCard = () =>{
+  const meetingCards = [...Array(20)].map((d, index) => {
+    const backgroundColor = getColor(index);
+    return {
+      key: `item-${backgroundColor}`,
+      label: String(index),
+      backgroundColor,
+    };
+  });
+  meetingCards.push({
+    addNewCard: true,
+    key: `CEAI`,
+    label: String(123),
+    backgroundColor: getColor(123),
+  })
+  return meetingCards;
+}
 
-const exampleData = [...Array(20)].map((d, index) => {
-  const backgroundColor = getColor(index);
-  return {
-    key: `item-${backgroundColor}`,
-    label: String(index),
-    backgroundColor,
-  };
-});
 
 export const initialState = {
   searchOverlay: false,
@@ -72,15 +81,9 @@ export const initialState = {
   playerRef: null,
   isYoutubeVisible: true,
   meetings: {
-    [1]: [...Array(20)].map((d, index) => {
-      const backgroundColor = getColor(index);
-      return {
-        key: `item-${backgroundColor}`,
-        label: String(index),
-        backgroundColor,
-      };
-    })
-  }
+    [1]: generateMeetingCard()
+  },
+  clickedFrom: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -110,9 +113,10 @@ const reducer = (state = initialState, action) => {
         meetings: {[action.payload.id]: action.payload.value}
       };
     }
-    case 'VLAD': {
-      return {...state, playerRef: action.payload};
+    case TOGGLE_OVERLAY: {
+      return {...state, searchOverlay: !state.searchOverlay, clickedFrom:action.payload.clickedFrom };
     }
+
     default:
       return state;
   }

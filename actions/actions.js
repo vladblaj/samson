@@ -1,18 +1,14 @@
 import {
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
   PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
-  SET_FIELD_VALUE, SET_MEETING_DATA,
+  SET_FIELD_VALUE,
+  SET_MEETING_DATA,
   SET_SELECTED_CIRCUMSTANTIAL_CELL,
-  TOGGLE
+  TOGGLE,
+  TOGGLE_OVERLAY
 } from "../reducers/actionConstants";
 
 const toggle = data => async dispatch => {
-  dispatch({
-    type: TOGGLE,
-    payload: data
-  })
-}
-const toggle2 = data => async dispatch => {
   dispatch({
     type: TOGGLE,
     payload: data
@@ -50,20 +46,19 @@ const setMeetingData = (data) => async dispatch => {
   })
 }
 
-
-const toVlad = data => {
+const toggleOverlay = (data) => async dispatch => {
   dispatch({
-    type: 'VLAD',
+    type: TOGGLE_OVERLAY,
     payload: data
   })
 }
+
 export default {
+  toggleOverlay,
   toggle,
-  toggle2,
   setFieldValue,
   addToCircumstantialMusic,
   setSelectedCircumstantialCell,
   playSelectedCircumstantialVideo,
   setMeetingData,
-  toVlad
 }

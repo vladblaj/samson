@@ -2,13 +2,14 @@ import React  from 'react';
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {Title} from "native-base";
 import {useDispatch} from "react-redux";
-import actions from "../actions/actions";
+import actions from "../../actions/actions";
+import {Actions} from "react-native-router-flux";
 const CellElement = props => {
   const dispatch = useDispatch();
 
   const toggleOverlay = () => {
-    dispatch(actions.toggle({name: 'searchOverlay'}));
     dispatch(actions.setSelectedCircumstantialCell({id: props.id}));
+    Actions.youtubeSearchOverlay();
   };
   const playSelectedSong = () => {
     dispatch(actions.setSelectedCircumstantialCell({id: props.id}))

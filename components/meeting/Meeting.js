@@ -6,10 +6,6 @@ import MeetingCard from "./MeetingCard";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
 
-
-
-
-
 const Meeting = (props) => {
   const {
     block,
@@ -24,10 +20,14 @@ const Meeting = (props) => {
     spring,
 
   } = Animated;
-  const {id, data} = props;
+  const {id} = props;
+  const data = useSelector(state => state.meetings[id])
+
   const dispatch = useDispatch();
   const array_move = (old_index, new_index) => {
     const dataClone = JSON.parse(JSON.stringify(data));
+    if(old_index===data.length-1 || new_index===data.length-1)
+      return dataClone
     if (new_index >= dataClone.length) {
       let k = new_index - dataClone.length + 1;
       while (k--) {
@@ -73,8 +73,8 @@ const Meeting = (props) => {
         <DraggableFlatList
             data={data}
             renderItem={renderItem}
-            onDragBegin={() => isActive.setValue(1)}
-            onRelease={() => isActive.setValue(0)}
+            onDragBegin={(rowNumber) => {rowNumber===data.length-1?isActive.setValue(0):isActive.setValue(1)}}
+            onRelease={(item) => isActive.setValue(0)}
             keyExtractor={(item, index) => `draggable-item-${item.key}`}
             onDragEnd={(swapItem) => {
               array_move(swapItem.from, swapItem.to)
@@ -107,9 +107,10 @@ export default Meeting;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
+    height: 480,
+    margin: 5,
     flex: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: 'rgb(32,16,23)',
   },
   rowItem: {
     height: 100,

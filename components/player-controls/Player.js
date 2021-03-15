@@ -6,7 +6,7 @@ import {View} from 'native-base';
 import SeekBar from './SeekBar';
 import Controls from './Controls';
 import {useDispatch, useSelector} from "react-redux";
-import actions from "../actions/actions";
+import actions from "../../actions/actions";
 
 const Player = (props) => {
   const store = useSelector(state => state);

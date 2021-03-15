@@ -1,6 +1,6 @@
 import YoutubePlayer from "react-native-youtube-iframe";
 import React, {useEffect} from 'react';
-import MovableView from "../MovableView";
+import MovableView from "../misc/MovableView";
 import {useState} from "reinspect";
 import {Image, StyleSheet, TouchableOpacity} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
