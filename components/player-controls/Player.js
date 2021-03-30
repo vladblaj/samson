@@ -7,6 +7,7 @@ import SeekBar from './SeekBar';
 import Controls from './Controls';
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
+import {THEME} from "../../color-theme";
 
 const Player = (props) => {
   const store = useSelector(state => state);
@@ -138,7 +139,7 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     flexWrap: 'nowrap',
-    backgroundColor: 'rgb(4,4,4)',
+    backgroundColor: THEME.PRIMARY_COLOR,
     height: 270
   },
   audioElement: {

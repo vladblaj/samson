@@ -5,6 +5,9 @@ import Animated from 'react-native-reanimated';
 import MeetingCard from "./MeetingCard";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
+import {THEME} from "../../color-theme";
+import {formatDate, UUID} from "../../utils";
+import {Actions} from "react-native-router-flux";
 
 const Meeting = (props) => {
   const {
@@ -26,8 +29,9 @@ const Meeting = (props) => {
   const dispatch = useDispatch();
   const array_move = (old_index, new_index) => {
     const dataClone = JSON.parse(JSON.stringify(data));
-    if(old_index===data.length-1 || new_index===data.length-1)
+    if (old_index === data.length - 1 || new_index === data.length - 1) {
       return dataClone
+    }
     if (new_index >= dataClone.length) {
       let k = new_index - dataClone.length + 1;
       while (k--) {
@@ -39,12 +43,28 @@ const Meeting = (props) => {
     return dataClone; // for testing
   };
 
+  const addMeeting = (item) => {
+    const {video, meetingType} = item;
+    const entry = {
+      meetingType: meetingType,
+      thumbnail: video.snippet.thumbnails.default.url,
+      title: video.snippet.title,
+      publishedAt: formatDate(video.snippet.publishedAt),
+      channel: video.snippet.channelTitle,
+      videoId: video.id.videoId,
+      key: UUID()
+    }
+    dispatch(actions.addEntryToMeeting({id, entry}));
+    Actions.pop();
+  }
+
   const renderItem = ({item, drag, isActive}) => {
     return (
         <MeetingCard
             item={item}
             drag={drag}
             isActive={isActive}
+            addMeeting={addMeeting}
             scale={isActive ? animState.position : 1}
         />
     );
@@ -73,7 +93,9 @@ const Meeting = (props) => {
         <DraggableFlatList
             data={data}
             renderItem={renderItem}
-            onDragBegin={(rowNumber) => {rowNumber===data.length-1?isActive.setValue(0):isActive.setValue(1)}}
+            onDragBegin={(rowNumber) => {
+              rowNumber === data.length - 1 ? isActive.setValue(0) : isActive.setValue(1)
+            }}
             onRelease={(item) => isActive.setValue(0)}
             keyExtractor={(item, index) => `draggable-item-${item.key}`}
             onDragEnd={(swapItem) => {
@@ -110,7 +132,7 @@ const styles = StyleSheet.create({
     height: 480,
     margin: 5,
     flex: 1,
-    backgroundColor: 'rgb(32,16,23)',
+    backgroundColor: THEME.PRIMARY_COLOR,
   },
   rowItem: {
     height: 100,

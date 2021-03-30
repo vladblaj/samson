@@ -1,25 +1,20 @@
-import React from 'react';
-import {useState} from "reinspect";
-import {Image, ScrollView, StyleSheet} from 'react-native';
+import React , {useState} from 'react';
+import { ScrollView, StyleSheet} from 'react-native';
 import {Input, Item, View} from "native-base";
 import VideoList from "./VideoList";
 import {getYoutubeSearchResults} from '../../api/YoutubeApi'
-import {useDispatch} from "react-redux";
-import actions from "../../actions/actions";
+import {THEME} from "../../color-theme";
 const API_KEY = 'AIzaSyCvchGhGdg1zZYciEFkRrWcKpCZ3CSdTZs';
 
 const YoutubeSearch = props => {
   const [videos, setVideos] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(null, 1);
-  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState(null);
   const searchOnYoutube = async (term) => {
     const results = await getYoutubeSearchResults(term)
     setVideos(results.data.items);
   }
-
-  const addToCircumstantialMusic = (vid) => {
-    dispatch(actions.addToCircumstantialMusic(vid));
-    dispatch(actions.toggle({name: 'searchOverlay'}))
+  const onVideoSelect = (video) =>{
+    props.onVideoSelect(video);
   }
   return (
       <View style={styles.container}>
@@ -31,7 +26,7 @@ const YoutubeSearch = props => {
 
         <ScrollView style={[styles.videoList]}>
         <VideoList
-            onVideoSelect={addToCircumstantialMusic}
+            onVideoSelect={onVideoSelect}
             videos={videos}/>
         </ScrollView>
       </View>
@@ -42,20 +37,15 @@ const styles = StyleSheet.create({
   searchInput: {
     height: 40,
     borderRadius: 4,
-    backgroundColor: 'white',
+    backgroundColor: THEME.FILLER_COLOR,
   },
   videoList:{
-    height: 360
-  },
-  searchInputIcon: {
-    borderRadius: 4,
-    backgroundColor: 'white',
-
+    height: 400
   },
   container: {
     opacity: 1,
     width: '80%',
-    backgroundColor: 'rgb(25,25,25)'
+    backgroundColor: THEME.SECONDARY_COLOR
 
   },
 });

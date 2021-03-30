@@ -1,6 +1,8 @@
 import React from 'react';
 import {ListItem, Title, View} from "native-base";
 import {Image, StyleSheet, Text} from "react-native";
+import {THEME} from "../../color-theme";
+import {formatDate} from "../../utils";
 
 const VideoListItem = ({video, onVideoSelect}) => {
 
@@ -9,25 +11,7 @@ const VideoListItem = ({video, onVideoSelect}) => {
   const width = video.snippet.thumbnails.default.width;
   const height = video.snippet.thumbnails.default.height;
   // implement your own date script, this is just an example
-  let date = video.snippet.publishedAt;
-  let YYYY = new Date(date).toJSON().slice(0, 4);
-  let MM = new Date(date).toJSON().slice(5, 7);
-  let DD = new Date(date).toJSON().slice(8, 10);
-  let mmName = {
-    '01': 'January',
-    '02': 'February',
-    '03': 'March',
-    '04': 'April',
-    '05': 'May',
-    '06': 'June',
-    '07': 'July',
-    '08': 'August',
-    '09': 'September',
-    '10': 'October',
-    '11': 'November',
-    '12': 'December'
-  };
-  date = mmName[MM] + ' ' + DD + ', ' + YYYY;
+  let date = formatDate(video.snippet.publishedAt);
 
   return (
       <ListItem onPress={() => onVideoSelect(video)} style={styles.listGroupItemListItemCustom}>
@@ -47,7 +31,6 @@ const VideoListItem = ({video, onVideoSelect}) => {
             </View>
           </View>
         </View>
-
       </ListItem>
   );
 };
@@ -81,11 +64,11 @@ const styles = StyleSheet.create({
     flexBasis: 20
   },
   title: {
-    color: 'rgb(255,255,255)',
+    color: THEME.FILLER_COLOR,
     fontWeight: 'bold',
   },
   textDetails: {
-    color: 'rgb(170,170,170)',
+    color: THEME.FILLER_COLOR,
 
   },
   thumbnail: {},

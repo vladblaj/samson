@@ -6,6 +6,7 @@ import {Image, StyleSheet, TouchableOpacity} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
 import {View} from "native-base";
+import {THEME} from "../../color-theme";
 
 const YoutubeMovable = props => {
   const store = useSelector(state => state);
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     right: 0,
     borderRadius: 3,
     width: 25, height: 25,
-    backgroundColor: 'rgb(25,118,209)',
+    backgroundColor: THEME.NEUTRAL_COLOR,
   }
 });
 

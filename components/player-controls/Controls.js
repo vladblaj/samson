@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import {THEME} from "../../color-theme";
 
 const Controls = ({
   paused,
@@ -21,12 +22,12 @@ const Controls = ({
 }) => (
     <View style={styles.container}>
       <TouchableOpacity activeOpacity={0.0} onPress={onPressShuffle}>
-        <Image style={[styles.secondaryControl, shuffleOn ? [] : styles.off]}
+        <Image style={[{tintColor:THEME.FILLER_COLOR}, styles.secondaryControl, shuffleOn ? [] : styles.off]}
                source={require('../../img/ic_shuffle_white.png')}/>
       </TouchableOpacity>
       <View style={{width: 40}} />
       <TouchableOpacity onPress={onBack}>
-        <Image source={require('../../img/ic_skip_previous_white_36pt.png')}/>
+        <Image style = {{tintColor:THEME.FILLER_COLOR}} source={require('../../img/ic_skip_previous_white_36pt.png')}/>
       </TouchableOpacity>
       <View style={{width: 20}} />
       {!paused ?
@@ -37,19 +38,19 @@ const Controls = ({
           </TouchableOpacity> :
           <TouchableOpacity onPress={onPressPlay}>
             <View style={styles.playButton}>
-              <Image source={require('../../img/ic_play_arrow_white_48pt.png')}/>
+              <Image style={{tintColor:THEME.FILLER_COLOR}} source={require('../../img/ic_play_arrow_white_48pt.png')}/>
             </View>
           </TouchableOpacity>
       }
       <View style={{width: 20}} />
       <TouchableOpacity onPress={onForward}
                         disabled={forwardDisabled}>
-        <Image style={[forwardDisabled && {opacity: 0.3}]}
+        <Image style={[{tintColor:THEME.FILLER_COLOR}, forwardDisabled && {opacity: 0.3}]}
                source={require('../../img/ic_skip_next_white_36pt.png')}/>
       </TouchableOpacity>
       <View style={{width: 40}} />
       <TouchableOpacity activeOpacity={0.0} onPress={onPressRepeat}>
-        <Image style={[styles.secondaryControl, repeatOn ? [] : styles.off]}
+        <Image style={[{tintColor:THEME.FILLER_COLOR}, styles.secondaryControl, repeatOn ? [] : styles.off]}
                source={require('../../img/ic_repeat_white.png')}/>
       </TouchableOpacity>
     </View>
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     height: 72,
     width: 72,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor:  THEME.FILLER_COLOR  ,
     borderRadius: 72 / 2,
     alignItems: 'center',
     justifyContent: 'center',

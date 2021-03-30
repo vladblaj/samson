@@ -1,4 +1,5 @@
 import {
+  ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
   PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
   SET_FIELD_VALUE,
@@ -53,6 +54,12 @@ const toggleOverlay = (data) => async dispatch => {
   })
 }
 
+const addEntryToMeeting = (data) => async dispatch => {
+  dispatch({
+    type: ADD_ENTRY_TO_MEETING,
+    payload: data
+  })
+}
 export default {
   toggleOverlay,
   toggle,
@@ -61,4 +68,5 @@ export default {
   setSelectedCircumstantialCell,
   playSelectedCircumstantialVideo,
   setMeetingData,
+  addEntryToMeeting
 }

@@ -3,17 +3,16 @@ import Animated from "react-native-reanimated";
 import React from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Thumbnail, Title, View} from "native-base";
-import actions from "../../actions/actions";
-import {useDispatch} from "react-redux";
+import {Actions} from "react-native-router-flux";
+import {THEME} from "../../color-theme";
 
 const MeetingCard = ({
   item,
   drag,
   isActive,
   scale,
+  addMeeting
 }) => {
-  const dispatch = useDispatch()
-
   const newCard = () => {
     return (<View style={styles.newCard}>
       <Image style={styles.newCardImage} source={require('../../img/round_add_circle_outline_black_18dp.png')}/>
@@ -23,20 +22,20 @@ const MeetingCard = ({
     return <View>
       <Grid>
         <Col style={styles.meetingName}>
-          <Title numberOfLines={4} style={styles.meetingNameText}>Meeting Name</Title>
+          <Title numberOfLines={4} style={styles.meetingNameText}>{item.meetingType}</Title>
         </Col>
         <Col style={{width: '25%'}}>
           <View style={styles.thumbnail}>
             <Thumbnail large round
-                       source={{uri: 'https://i.ytimg.com/vi/r-AH9oMD-Es/hqdefault.jpg'}}/>
+                       source={{uri: item.thumbnail}}/>
           </View>
         </Col>
         <Col style={{width: '35%'}}>
           <Row>
             <View style={styles.mediaBody}>
-              <Title numberOfLines={2} style={styles.title}>Video Titlu eu merg la culcare te pup</Title>
-              <Text style={styles.textDetails}>Channel Title</Text>
-              <Text style={styles.textDetails}>February 05 2020</Text>
+              <Title numberOfLines={2} style={styles.title}>{item.title}</Title>
+              <Text style={styles.textDetails}>{item.channel}</Text>
+              <Text style={styles.textDetails}>{item.publishedAt}</Text>
             </View>
           </Row>
         </Col>
@@ -44,19 +43,19 @@ const MeetingCard = ({
     </View>
   }
   const addNewCard = () => {
-    dispatch(actions.toggleOverlay({clickedFrom: 'MEETING'}));
+    Actions.youtubeSearchOverlay({onItemSelected: addMeeting, meetingTypeVisible: true});
   }
   return (
       <TouchableOpacity style={styles.rowItem} onLongPress={!item.addNewCard ? drag : null}
                         onPress={item.addNewCard ? addNewCard : null}>
         <Animated.View
             style={{
-              marginBottom:4,
+              marginBottom: 4,
               flex: 1,
               paddingHorizontal: 10,
               alignItems: 'center',
               flexDirection: 'row',
-              backgroundColor: item.backgroundColor,
+              backgroundColor: THEME.NEUTRAL_COLOR,
               elevation: isActive ? 10 : 0,
               shadowRadius: isActive ? 10 : 0,
               shadowColor: isActive ? 'black' : 'transparent',
@@ -79,17 +78,16 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   meetingNameText: {
-    color: 'white',
+    color: THEME.FILLER_COLOR,
     fontSize: 16
   },
   rowItem: {
-    backgroundColor: 'rgb(4,4,4)',
+    backgroundColor: THEME.PRIMARY_COLOR,
     height: 100,
     width: '100%',
   },
   text: {
     fontWeight: 'bold',
-    color: 'white',
     fontSize: 32,
     flex: 1,
     textAlign: 'center',
@@ -131,10 +129,10 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: 'rgb(255,255,255)',
+    color: THEME.FILLER_COLOR,
   },
   textDetails: {
-    color: 'rgb(170,170,170)',
+    color: THEME.FILLER_COLOR,
 
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View,} from 'react-native';
 import Slider from "@react-native-community/slider";
+import {THEME} from "../../color-theme";
 
 function pad(n, width, z = 0) {
   n = n + '';
@@ -39,8 +40,9 @@ const SeekBar = ({
             onValueChange={onValueChange}
             value={currentPosition}
             style={styles.slider}
-            minimumTrackTintColor='#fff'
-            maximumTrackTintColor='rgba(255, 255, 255, 0.14)'
+            minimumTrackTintColor={THEME.FILLER_COLOR}
+            maximumTrackTintColor={THEME.FILLER_COLOR}
+            thumbTintColor={THEME.FILLER_COLOR}
             thumbStyle={styles.thumb}
             trackStyle={styles.track}/>
       </View>
@@ -66,10 +68,11 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'white',
+    color: THEME.FILLER_COLOR,
+    backgroundColor: THEME.FILLER_COLOR,
   },
   text: {
-    color: 'rgba(255, 255, 255, 0.72)',
+    color:  THEME.FILLER_COLOR,
     fontSize: 12,
     textAlign: 'center',
 

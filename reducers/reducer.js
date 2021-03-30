@@ -1,12 +1,15 @@
 //Define your initialState
 import {
+  ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
   PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   SET_SELECTED_CIRCUMSTANTIAL_CELL,
-  TOGGLE, TOGGLE_OVERLAY
+  TOGGLE
 } from "./actionConstants";
+import {THEME} from "../color-theme";
+import {UUID} from "../utils";
 
 const mockItem = {
   "kind": "youtube#searchResult",
@@ -49,13 +52,13 @@ function getColor(i) {
   const colorVal = i * multiplier;
   return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
 }
-const generateMeetingCard = () =>{
+
+const generateMeetingCard = () => {
   const meetingCards = [...Array(20)].map((d, index) => {
-    const backgroundColor = getColor(index);
     return {
-      key: `item-${backgroundColor}`,
+      key: `item-${Math.floor(Math.random() * 1000)}`,
       label: String(index),
-      backgroundColor,
+      backgroundColor: THEME.NEUTRAL_COLOR,
     };
   });
   meetingCards.push({
@@ -66,7 +69,6 @@ const generateMeetingCard = () =>{
   })
   return meetingCards;
 }
-
 
 export const initialState = {
   searchOverlay: false,
@@ -81,9 +83,22 @@ export const initialState = {
   playerRef: null,
   isYoutubeVisible: true,
   meetings: {
-    [1]: generateMeetingCard()
+    [1]: [{
+      key: UUID(),
+      addNewCard: true
+    }]
   },
-  clickedFrom: null
+  meetingTypes: [
+    {label: 'Entrance of Officers', value: 'Entrance of Officers'},
+    {label: 'Opening Ode', value: 'Opening Ode'},
+    {label: 'Deacons Attend TB Etc.', value: 'Deacons Attend TB Etc.'},
+    {label: 'Entrance of Lodge Guests', value: 'Entrance of Lodge Guests'},
+    {label: 'Late Arrivals', value: 'Late Arrivals'},
+    {label: 'Signing of Minutes', value: 'Signing of Minutes'},
+    {label: 'Balloting', value: 'Balloting'},
+    {label: 'PGM or A/PGM Admission', value: 'PGM or A/PGM Admission'},
+    {label: 'In Memoriam', value: 'In Memoriam'},
+  ]
 }
 
 const reducer = (state = initialState, action) => {
@@ -113,8 +128,11 @@ const reducer = (state = initialState, action) => {
         meetings: {[action.payload.id]: action.payload.value}
       };
     }
-    case TOGGLE_OVERLAY: {
-      return {...state, searchOverlay: !state.searchOverlay, clickedFrom:action.payload.clickedFrom };
+    case  ADD_ENTRY_TO_MEETING: {
+      return {
+        ...state,
+        meetings: {[action.payload.id]: [ action.payload.entry, ...state.meetings[action.payload.id]]}
+      };
     }
 
     default:

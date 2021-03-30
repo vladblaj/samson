@@ -3,6 +3,7 @@ import {Animated, PanResponder, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {useState} from "reinspect";
 import AnimatedHideView from "react-native-animated-hide-view";
+import {THEME} from "../../color-theme";
 
 const MovableView = props => {
 
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     right: 0,
     borderRadius: 3,
     width: 25, height: 25,
-    backgroundColor: 'rgb(25,118,209)',
+    backgroundColor: THEME.FILLER_COLOR,
   }
 })
 MovableView.propTypes = {

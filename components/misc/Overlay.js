@@ -1,21 +1,20 @@
 import React, {useEffect} from 'react';
-import {Animated, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {useDispatch} from "react-redux";
-import actions from "../../actions/actions";
-import {Icon, Title, View} from "native-base";
+import {Animated, StyleSheet} from 'react-native';
+import {useSelector} from "react-redux";
+import {Button, Text, Title, View} from "native-base";
 import {useState} from "reinspect";
 import YoutubeSearch from "../youtube-search/YoutubeSearch";
 import {Actions} from "react-native-router-flux";
 import DropDownPicker from 'react-native-dropdown-picker';
+import {THEME} from "../../color-theme";
 
-const Overlay = () => {
-  const dispatch = useDispatch();
-  const [meetingCardName, setMeetingCardName] = useState();
+const Overlay = (props) => {
+  const {onItemSelected, meetingTypeVisible} = props;
   const [opacity, setOpacity] = useState(new Animated.Value(0));
-  const [country, setCountry] = useState();
-  const toggleOverlay = () => {
-    dispatch(actions.toggle({name: 'searchOverlay'}))
-  };
+  const [selectedMeetingType, setSelectedMeetingType] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedVideoLabel, setSelectedVideoLabel] = useState('Video: ');
+  const meetingTypes = useSelector(state => state.meetingTypes)
 
   useEffect(() => {
     Animated.timing(opacity, {
@@ -24,46 +23,96 @@ const Overlay = () => {
     }).start();
   }, [])
 
+  const isFormInvalid = () => {
+    if (meetingTypeVisible) {
+      return selectedVideo === null || selectedMeetingType === null;
+    }
+    return selectedVideo === null;
+  }
+
+  const setVideoItem = (video) => {
+    setSelectedVideoLabel(`Video: ${video.snippet.title}`);
+    setSelectedVideo(video);
+  }
+  const renderOk = () => {
+    return (
+        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, justifyContent: 1}}
+                onPress={() => onItemSelected({video: selectedVideo, meetingType: selectedMeetingType})}>
+          <Text>Ok</Text>
+        </Button>
+    );
+  }
   const renderClose = () => {
     return (
-        <View style={styles.closeBtnContainer}>
-          <TouchableOpacity onPress={Actions.pop}>
-            <Text style={{color: 'white'}}>Close</Text>
-          </TouchableOpacity>
-        </View>
+        <Button danger onPress={Actions.pop} style={{
+          backgroundColor: THEME.SECONDARY_COLOR,
+          width: 90,
+          justifyContent: 1
+        }}><Text> Cancel </Text></Button>
     );
-  };
+  }
+
   return (
       <Animated.View style={[styles.container, {opacity: opacity}]}>
         <View style={styles.overlayContent}>
-          {renderClose()}
-          <Title style={styles.title}>New Meeting</Title>
-          <DropDownPicker
-              placeholder="Select meeting type"
-              items={[
-                {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900"/>, hidden: true},
-                {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900"/>},
-                {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900"/>},
-              ]}
-              defaultValue={country}
-              containerStyle={{height: 40, width: '80%', marginBottom: 10}}
-              style={{backgroundColor: '#fafafa'}}
-              itemStyle={{
-                justifyContent: 'flex-start',
-
-              }}
-              dropDownStyle={{backgroundColor: '#fafafa'}}
-              onChangeItem={item => {
-                setCountry(item.value)
-              }}
-          />
-          <YoutubeSearch/>
-
+          <View style={styles.content}>
+            <Title style={styles.title}>Add Meeting </Title>
+            {meetingTypeVisible && <Text style={styles.label}>Meeting Type</Text> && <DropDownPicker
+                placeholder="Select meeting type"
+                items={meetingTypes}
+                defaultValue={selectedMeetingType}
+                containerStyle={{height: 40, width: '80%', marginBottom: 10,}}
+                style={{
+                  backgroundColor: THEME.FILLER_COLOR,
+                  borderColor: THEME.FILLER_COLOR,
+                }}
+                itemStyle={{
+                  color: 'white',
+                  justifyContent: 'flex-start',
+                }}
+                dropDownStyle={{
+                  color: 'white',
+                  borderColor: THEME.FILLER_COLOR,
+                  backgroundColor: THEME.FILLER_COLOR,
+                }}
+                onChangeItem={item => {
+                  setSelectedMeetingType(item.value)
+                }}
+            />}
+            <Text numberOfLines={1} style={styles.label}>{selectedVideoLabel}</Text>
+            <YoutubeSearch onVideoSelect={setVideoItem}/>
+          </View>
+          <View style={styles.buttons}>
+            {renderClose()}
+            {renderOk(
+                meetingTypeVisible ? selectedMeetingType == null || selectedVideo == null : selectedVideo == null)}
+          </View>
         </View>
       </Animated.View>
   );
 }
 const styles = StyleSheet.create({
+  label: {
+    alignSelf: 'flex-start',
+    marginLeft: 40,
+    marginRight: 40,
+    marginBottom: 10,
+    color: THEME.FILLER_COLOR,
+  },
+  buttons: {
+    width: '100%',
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  content: {
+    width: '100%',
+    flexGrow: 2,
+    height: '80%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   text: {margin: 6},
   container: {
     justifyContent: "flex-start",
@@ -73,26 +122,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 100,
     left: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(43,46,74, 0.5)'
   },
   overlayContent: {
     alignItems: "center",
-    backgroundColor: 'rgb(25,25,25)',
-    height: '60%',
+    backgroundColor: THEME.SECONDARY_COLOR,
+    height: '75%',
     width: '90%',
     opacity: 1,
     borderRadius: 4
   },
   title: {
-    color: 'rgb(255,255,255)',
-    marginBottom: 20
+    marginTop: 30,
+    marginBottom: 30,
+    color: THEME.FILLER_COLOR,
   },
   searchInput: {
-    color: 'rgb(255,255,255)'
+    color: THEME.SECONDARY_COLOR
   },
   closeBtnContainer: {
     width: '100%',
-    color: 'white',
+    color: THEME.SECONDARY_COLOR,
     paddingTop: 20,
     flexDirection: 'row',
     justifyContent: 'flex-end',

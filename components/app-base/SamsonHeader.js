@@ -4,17 +4,18 @@ import {Body, Button, Header, Icon, Left, Right, Title} from "native-base";
 import actions from "../../actions/actions";
 import {useDispatch} from "react-redux";
 import {Actions} from "react-native-router-flux";
+import {THEME} from "../../color-theme";
 const SamsonHeader = () => {
   const dispatch = useDispatch()
   return (
       <Header style={styles.header}>
         <Left>
           <Button transparent>
-            <Icon name='menu'/>
+            <Icon style={{color: THEME.FILLER_COLOR }} name='menu'/>
           </Button>
         </Left>
         <Body>
-          <Title style={{color: 'white'}}>Samson</Title>
+          <Title style={{color: THEME.FILLER_COLOR}}>Samson</Title>
         </Body>
         <Right>
           <TouchableOpacity style={styles.maximize} onPress={() => {
@@ -34,10 +35,9 @@ const styles = StyleSheet.create({
     flexGrow: 3,
     flexShrink: 1,
     flexBasis: 0,
-    backgroundColor: '#14e930'
   },
   header: {
-    backgroundColor: 'rgb(4,4,4)',
+    backgroundColor: THEME.PRIMARY_COLOR,
   },
   maximize: {
     alignItems: 'center',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     right: 0,
     borderRadius: 3,
     width: 30, height: 25,
-    backgroundColor: 'white',
+    backgroundColor:  THEME.FILLER_COLOR,
   }
 });
 

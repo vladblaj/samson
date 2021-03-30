@@ -6,6 +6,7 @@ import CircumstantialMusic from "../circumstantial-music/CircumstantialMusic";
 import Meeting from "../meeting/Meeting";
 import StatusBar from "react-native-web/dist/exports/StatusBar";
 import {Content} from "native-base";
+import {THEME} from "../../color-theme";
 
 const SamsonContent = (props) => {
 
@@ -21,7 +22,7 @@ const SamsonContent = (props) => {
 
 const styles = StyleSheet.create({
   content: {
-    backgroundColor: 'rgb(4,4,4)',
+    backgroundColor: THEME.PRIMARY_COLOR,
   }
 });
 
