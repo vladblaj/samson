@@ -44,13 +44,6 @@ const MovableView = props => {
     }
   });
 
-  const changeDisableStatus = () => {
-    setDisable(!disabled);
-  };
-
-  const onPresss = () => {
-    console.log('aaaaaaa');
-  }
 
   return <Animated.View
       {...panResponder.panHandlers}

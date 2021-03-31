@@ -1,10 +1,9 @@
 import {
   ADD_ENTRY_TO_MEETING,
-  ADD_TO_CIRCUMSTANTIAL_MUSIC,
-  PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
+  ADD_TO_CIRCUMSTANTIAL_MUSIC, PLAY_NEXT, PLAY_PREVIOUS,
+  PLAY_SELECTED_VIDEO,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
-  SET_SELECTED_CIRCUMSTANTIAL_CELL,
   TOGGLE,
   TOGGLE_OVERLAY
 } from "../reducers/actionConstants";
@@ -27,15 +26,9 @@ const addToCircumstantialMusic = (data) => async dispatch => {
     payload: data
   })
 }
-const setSelectedCircumstantialCell = (data) => async dispatch => {
+const playSelectedVideo = (data) => async dispatch => {
   dispatch({
-    type: SET_SELECTED_CIRCUMSTANTIAL_CELL,
-    payload: data
-  })
-}
-const playSelectedCircumstantialVideo = (data) => async dispatch => {
-  dispatch({
-    type: PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
+    type: PLAY_SELECTED_VIDEO,
     payload: data
   })
 }
@@ -60,13 +53,29 @@ const addEntryToMeeting = (data) => async dispatch => {
     payload: data
   })
 }
+
+const playNext = (data)  => async dispatch => {
+  dispatch({
+    type: PLAY_NEXT,
+    payload: data
+  })
+}
+
+const playPrevious = (data) => async dispatch => {
+  dispatch({
+    type: PLAY_PREVIOUS,
+    payload: data
+  })
+}
+
 export default {
   toggleOverlay,
   toggle,
   setFieldValue,
   addToCircumstantialMusic,
-  setSelectedCircumstantialCell,
-  playSelectedCircumstantialVideo,
+  playSelectedVideo,
   setMeetingData,
-  addEntryToMeeting
+  addEntryToMeeting,
+  playNext,
+  playPrevious
 }

@@ -12,8 +12,8 @@ const Overlay = (props) => {
   const {onItemSelected, meetingTypeVisible} = props;
   const [opacity, setOpacity] = useState(new Animated.Value(0));
   const [selectedMeetingType, setSelectedMeetingType] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [selectedVideoLabel, setSelectedVideoLabel] = useState('Video: ');
+  const [selectedVideo, setSelectedVideo] = useState();
+  const [selectedVideoLabel, setSelectedVideoLabel] = useState(`Video: ${props.data?props.data.title:''}`);
   const meetingTypes = useSelector(state => state.meetingTypes)
 
   useEffect(() => {

@@ -17,14 +17,8 @@ const Player = (props) => {
   const playerRef = props.ytFrameRef;
 
   const fetchCurrentTime = async () => {
-    if (playerRef && playerRef.current && playerRef.current.getCurrentTime) {
-      playerRef.current.getCurrentTime().then(
-          currentTime => {
-            setCurrentPositionBounded(currentTime);
-            true;
-          }
-      ).catch(e => console.log('Vlad'));
-    }
+    const currentTime = await playerRef.current?.getCurrentTime();
+    setCurrentPositionBounded(currentTime);
   }
 
   const startFetchingCurrentTime = () => {
@@ -40,14 +34,13 @@ const Player = (props) => {
   }
 
   useEffect(() => {
-    if (!store.paused) {
+    if (!store.paused && store.videoState === 'ready') {
       startFetchingCurrentTime();
     }
     if (store.paused) {
       stopFetchingCurrentTime();
-
     }
-  }, [store.selectedTrack, store.paused])
+  }, [store.selectedTrack, store.paused, store.videoState])
   const seek = (time) => {
     time = Math.round(time);
     setCurrentPositionBounded(time);
@@ -71,36 +64,27 @@ const Player = (props) => {
     setCurrentPosition(Math.floor(time));
   }
 
+
   const onBack = () => {
-    if (currentPosition < 10 && store.selectedTrack > 0) {
-      /*setTimeout(() => this.setState({
-        currentPosition: 0,
-        paused: false,
-        isChanging: false,
-        selectedTrack: this.state.selectedTrack - 1,
-      }), 0);*/
-    } else {
-      setCurrentPositionBounded(0);
-    }
+    seek(0);
+    setCurrentPositionBounded(0);
+    stopFetchingCurrentTime();
+    dispatch(actions.playPrevious());
   }
 
   const onForward = () => {
-    if (store.selectedTrack < store.tracks.length - 1) {
-      setTimeout(() => {
-        setCurrentPositionBounded(0);
-        dispatch(actions.setFieldValue({name: 'paused', value: false}));
-      }, 0);
-    }
+    seek(0);
+    setCurrentPositionBounded(0);
+    stopFetchingCurrentTime();
+    dispatch(actions.playNext());
   }
 
   const onPressPlay = () => {
     dispatch(actions.setFieldValue({name: 'paused', value: false}));
-    startFetchingCurrentTime();
   }
 
   const onPressPause = () => {
     dispatch(actions.setFieldValue({name: 'paused', value: true}));
-    stopFetchingCurrentTime();
   }
   const onSlidingStart = () => {
     stopFetchingCurrentTime();
@@ -122,7 +106,7 @@ const Player = (props) => {
             repeatOn={store.repeatOn}
             shuffleOn={store.shuffleOn}
             //forwardDisabled={this.state.selectedTrack === this.props.tracks.length - 1}
-            forwardDisabled={true}
+            forwardDisabled={false}
             onPressShuffle={() => dispatch(actions.toggle({name: 'shuffleOn'}))}
             onPressPlay={onPressPlay}
             onPressPause={onPressPause}

@@ -25,6 +25,7 @@ const Meeting = (props) => {
   } = Animated;
   const {id} = props;
   const data = useSelector(state => state.meetings[id])
+  const selectedTrack = useSelector(state => state.selectedTrack)
 
   const dispatch = useDispatch();
   const array_move = (old_index, new_index) => {
@@ -61,7 +62,8 @@ const Meeting = (props) => {
   const renderItem = ({item, drag, isActive}) => {
     return (
         <MeetingCard
-            item={item}
+            selectedTrack = {selectedTrack}
+            video={item}
             drag={drag}
             isActive={isActive}
             addMeeting={addMeeting}

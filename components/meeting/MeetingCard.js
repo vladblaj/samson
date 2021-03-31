@@ -5,14 +5,18 @@ import {Col, Grid, Row} from "react-native-easy-grid";
 import {Thumbnail, Title, View} from "native-base";
 import {Actions} from "react-native-router-flux";
 import {THEME} from "../../color-theme";
+import {useDispatch} from "react-redux";
+import actions from "../../actions/actions";
 
 const MeetingCard = ({
-  item,
+  video,
   drag,
   isActive,
   scale,
-  addMeeting
+  addMeeting,
+  selectedTrack
 }) => {
+  const dispatch = useDispatch();
   const newCard = () => {
     return (<View style={styles.newCard}>
       <Image style={styles.newCardImage} source={require('../../img/round_add_circle_outline_black_18dp.png')}/>
@@ -22,20 +26,20 @@ const MeetingCard = ({
     return <View>
       <Grid>
         <Col style={styles.meetingName}>
-          <Title numberOfLines={4} style={styles.meetingNameText}>{item.meetingType}</Title>
+          <Title numberOfLines={4} style={styles.meetingNameText}>{video.meetingType}</Title>
         </Col>
         <Col style={{width: '25%'}}>
           <View style={styles.thumbnail}>
             <Thumbnail large round
-                       source={{uri: item.thumbnail}}/>
+                       source={{uri: video.thumbnail}}/>
           </View>
         </Col>
         <Col style={{width: '35%'}}>
           <Row>
             <View style={styles.mediaBody}>
-              <Title numberOfLines={2} style={styles.title}>{item.title}</Title>
-              <Text style={styles.textDetails}>{item.channel}</Text>
-              <Text style={styles.textDetails}>{item.publishedAt}</Text>
+              <Title numberOfLines={2} style={styles.title}>{video.title}</Title>
+              <Text style={styles.textDetails}>{video.channel}</Text>
+              <Text style={styles.textDetails}>{video.publishedAt}</Text>
             </View>
           </Row>
         </Col>
@@ -45,9 +49,18 @@ const MeetingCard = ({
   const addNewCard = () => {
     Actions.youtubeSearchOverlay({onItemSelected: addMeeting, meetingTypeVisible: true});
   }
+
+  const playSelectedMeetingVideo = () => {
+    dispatch(actions.playSelectedVideo({video: video, playingIn: 'MEETING'}))
+  }
+
+  const getBackgroundColor = () => {
+    return video && selectedTrack && video.key === selectedTrack.key ? THEME.SELECTED
+        :  THEME.NEUTRAL_COLOR
+  }
   return (
-      <TouchableOpacity style={styles.rowItem} onLongPress={!item.addNewCard ? drag : null}
-                        onPress={item.addNewCard ? addNewCard : null}>
+      <TouchableOpacity style={styles.rowItem} onLongPress={!video.addNewCard ? drag : null}
+                        onPress={video.addNewCard ? addNewCard : playSelectedMeetingVideo}>
         <Animated.View
             style={{
               marginBottom: 4,
@@ -55,7 +68,7 @@ const MeetingCard = ({
               paddingHorizontal: 10,
               alignItems: 'center',
               flexDirection: 'row',
-              backgroundColor: THEME.NEUTRAL_COLOR,
+              backgroundColor: getBackgroundColor(),
               elevation: isActive ? 10 : 0,
               shadowRadius: isActive ? 10 : 0,
               shadowColor: isActive ? 'black' : 'transparent',
@@ -63,7 +76,7 @@ const MeetingCard = ({
               transform: [{scaleX: scale}, {scaleY: scale}],
               borderRadius: 4
             }}>
-          {item.addNewCard ? newCard() : normalCard()}
+          {video.addNewCard ? newCard() : normalCard()}
         </Animated.View>
       </TouchableOpacity>
   );

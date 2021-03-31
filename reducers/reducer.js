@@ -1,14 +1,13 @@
-//Define your initialState
 import {
   ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
-  PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO,
+  PLAY_NEXT,
+  PLAY_PREVIOUS,
+  PLAY_SELECTED_VIDEO,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
-  SET_SELECTED_CIRCUMSTANTIAL_CELL,
   TOGGLE
 } from "./actionConstants";
-import {THEME} from "../color-theme";
 import {UUID} from "../utils";
 
 const mockItem = {
@@ -45,49 +44,30 @@ const mockItem = {
     "publishTime": "2021-02-03T13:00:12Z"
   }
 }
-const NUM_ITEMS = 10;
 
-function getColor(i) {
-  const multiplier = 255 / (NUM_ITEMS - 1);
-  const colorVal = i * multiplier;
-  return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
-}
-
-const generateMeetingCard = () => {
-  const meetingCards = [...Array(20)].map((d, index) => {
-    return {
-      key: `item-${Math.floor(Math.random() * 1000)}`,
-      label: String(index),
-      backgroundColor: THEME.NEUTRAL_COLOR,
-    };
-  });
-  meetingCards.push({
-    addNewCard: true,
-    key: `CEAI`,
-    label: String(123),
-    backgroundColor: getColor(123),
-  })
-  return meetingCards;
-}
+const MAX_PREVIOUS_TRACKS = 5;
 
 export const initialState = {
   searchOverlay: false,
   count: 0,
   paused: true,
   duration: 0,
-  selectedTrack: '2-aWEYezEMk',
+  selectedTrack: null,
   repeatOn: false,
   shuffleOn: false,
-  selectedCircumstantialCell: 0,
-  tracks: {},
   playerRef: null,
   isYoutubeVisible: true,
+  playingIn: null,
+  selectedMeeting: 1,
+  tracks: [],
+  previousTracks: [],
   meetings: {
     [1]: [{
       key: UUID(),
       addNewCard: true
     }]
   },
+  videoState: null,
   meetingTypes: [
     {label: 'Entrance of Officers', value: 'Entrance of Officers'},
     {label: 'Opening Ode', value: 'Opening Ode'},
@@ -100,7 +80,89 @@ export const initialState = {
     {label: 'In Memoriam', value: 'In Memoriam'},
   ]
 }
+const randomInteger = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+const nextShuffledTrack = (tracks, selectedTrack) => {
+  if (!tracks) {
+    return null;
+  }
+  if (0 === tracks.length - 1) {
+    return 0;
+  }
+  const nextRandomTrackIndex = randomInteger(0, tracks.length - 1);
+  console.log(nextRandomTrackIndex);
+  if (tracks[nextRandomTrackIndex].key === selectedTrack.key) {
+    return nextShuffledTrack(tracks, selectedTrack);
+  }
+  return tracks[nextRandomTrackIndex];
+}
+const findNextTrackStartingWithIndex = (tracks, selectedTrack, shuffleOn) => {
+  if (!tracks || !selectedTrack) {
+    return null;
+  }
+  if (shuffleOn) {
+    return nextShuffledTrack(tracks, selectedTrack);
+  }
+  const currentIndex = tracks.findIndex(track => track.key === selectedTrack.key);
+  for (let i = currentIndex + 1; i < tracks.length; i++) {
+    if (tracks[i] != null && tracks[i].videoId) {
+      return tracks[i];
+    }
+  }
+  for (let i = 0; i < tracks.length; i++) {
+    if (tracks[i] != null) {
+      return tracks[i];
+    }
+  }
+}
+const playNext = (state) => {
+  let nextTrack;
+  if (state.repeatOn) {
+    nextTrack = state.selectedTrack;
+  } else {
+    switch (state.playingIn) {
+      case "CIRCUMSTANTIAL":
+        nextTrack = findNextTrackStartingWithIndex(state.tracks, state.selectedTrack, state.shuffleOn);
+        break;
+      case "MEETING":
+        nextTrack = findNextTrackStartingWithIndex(state.meetings[state.selectedMeeting], state.selectedTrack,
+            state.shuffleOn);
+        break;
+    }
+  }
+  const previousTracks = JSON.parse(JSON.stringify([...state.previousTracks, nextTrack] || []));
+  if (previousTracks.length > MAX_PREVIOUS_TRACKS) {
+    previousTracks.shift();
+  }
+  return {
+    ...state,
+    selectedTrack: nextTrack,
+    previousTracks,
+    paused: false
+  };
+}
+const playPrevious = (state) => {
+  let previous;
+  let previousTracks = JSON.parse(JSON.stringify(state.previousTracks || []));
+  if (previousTracks.length > 1) {
+    previousTracks.pop();
+  }
 
+  console.log(previousTracks.length)
+  if (!state.previousTracks) {
+    previous = state.selectedTrack
+  } else {
+    previous = state.previousTracks[state.previousTracks.length - 1];
+  }
+  return {
+    ...state,
+    selectedTrack: previous,
+    previousTracks,
+    paused: false
+  };
+
+}
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_FIELD_VALUE:
@@ -108,19 +170,26 @@ const reducer = (state = initialState, action) => {
     case TOGGLE:
       return {...state, [action.payload.name]: !state[action.payload.name]};
     case ADD_TO_CIRCUMSTANTIAL_MUSIC:
-      return {...state, tracks: {...state.tracks, [state.selectedCircumstantialCell]: action.payload}};
-    case SET_SELECTED_CIRCUMSTANTIAL_CELL:
-      return {...state, selectedCircumstantialCell: action.payload.id};
-    case PLAY_SELECTED_CIRCUMSTANTIAL_VIDEO: {
-      if (state.tracks[state.selectedCircumstantialCell] && action.payload.id !== undefined) {
-        return {
-          ...state,
-          selectedTrack: state.tracks[action.payload.id].id.videoId,
-          selectedCircumstantialCell: action.payload.id,
-          paused: false
-        };
+      const replIndex = state.tracks.findIndex(tr => tr.key === action.payload.entry.key)
+      if (replIndex === -1) {
+        return {...state, tracks: [...state.tracks, action.payload.entry]};
       }
-      return state;
+      return {
+        ...state,
+        tracks: state.tracks.map((track, index) => index === replIndex ? action.payload.entry : track)
+      };
+    case PLAY_SELECTED_VIDEO: {
+      const previousTracks = JSON.parse(JSON.stringify([...state.previousTracks, action.payload.video] || []));
+      if (previousTracks.length > MAX_PREVIOUS_TRACKS) {
+        previousTracks.shift();
+      }
+      return {
+        ...state,
+        selectedTrack: action.payload.video,
+        playingIn: action.payload.playingIn,
+        previousTracks,
+        paused: false
+      };
     }
     case SET_MEETING_DATA: {
       return {
@@ -131,9 +200,13 @@ const reducer = (state = initialState, action) => {
     case  ADD_ENTRY_TO_MEETING: {
       return {
         ...state,
-        meetings: {[action.payload.id]: [ action.payload.entry, ...state.meetings[action.payload.id]]}
+        meetings: {[action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]}
       };
     }
+    case PLAY_NEXT:
+      return playNext(state);
+    case PLAY_PREVIOUS:
+      return playPrevious(state);
 
     default:
       return state;

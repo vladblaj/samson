@@ -32,7 +32,6 @@ const YoutubeMovable = props => {
       dispatch(actions.toggle({name: 'paused'}));
     }
     setPlayerState(event);
-
   }
   const minimize = (e) => {
     dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: false}));
@@ -49,12 +48,13 @@ const YoutubeMovable = props => {
                 onChangeState={setDurationOnStateChange}
                 onReady={() => {
                   props.ytFrameRef.current.seekTo(0);
+                  dispatch(actions.setFieldValue({name: 'videoState', value: 'ready'}));
                 }}
                 ref={props.ytFrameRef}
                 height={230}
                 width={400}
                 play={!store.paused}
-                videoId={store.selectedTrack}
+                videoId={store.selectedTrack?store.selectedTrack.videoId:null}
                 initialPlayerParams={{controls: 0}}
             />
           </View>
