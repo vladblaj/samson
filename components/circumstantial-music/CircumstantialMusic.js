@@ -9,7 +9,7 @@ const CircumstantialMusic = () => {
   return (
       <View style={styles.container}>
         {[...Array(12).keys()].map(function (id) {
-          const existingTrack = store.tracks? store.tracks.find(t => t.key===id): null;
+          const existingTrack = store.tracks && store.tracks.find? store.tracks.find(t => t.key===id): null;
           return <CellElement key={id} id={id} video={existingTrack} selectedTrack={store.selectedTrack}/>;
         })}
       </View>
