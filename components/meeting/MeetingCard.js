@@ -1,22 +1,25 @@
-import {Image, StyleSheet, Text, TouchableOpacity} from "react-native";
-import Animated from "react-native-reanimated";
-import React from "react";
+import {Animated, Image, StyleSheet, Text, TouchableOpacity} from "react-native";
+
+import React, {useState} from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
-import {Thumbnail, Title, View} from "native-base";
-import {Actions} from "react-native-router-flux";
+import {Icon, Thumbnail, Title, View} from "native-base";
 import {THEME} from "../../color-theme";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
+import {useRotateAnimation} from "./useRotateHook";
 
 const MeetingCard = ({
   video,
-  drag,
   isActive,
   scale,
-  addMeeting,
-  selectedTrack
+  selectedTrack,
+  onClick,
+  onLongClick
 }) => {
   const dispatch = useDispatch();
+  const editMeeting = useSelector(state => state.editMeeting)
+
+  const [translation, rotation] = useRotateAnimation(editMeeting)
   const newCard = () => {
     return (<View style={styles.newCard}>
       <Image style={styles.newCardImage} source={require('../../img/round_add_circle_outline_black_18dp.png')}/>
@@ -46,21 +49,16 @@ const MeetingCard = ({
       </Grid>
     </View>
   }
-  const addNewCard = () => {
-    Actions.youtubeSearchOverlay({onItemSelected: addMeeting, meetingTypeVisible: true});
-  }
-
-  const playSelectedMeetingVideo = () => {
-    dispatch(actions.playSelectedVideo({video: video, playingIn: 'MEETING'}))
-  }
-
   const getBackgroundColor = () => {
     return video && selectedTrack && video.key === selectedTrack.key ? THEME.SELECTED
-        :  THEME.NEUTRAL_COLOR
+        : THEME.NEUTRAL_COLOR
+  }
+  const removeMeetingCard = () => {
+    dispatch(actions.removeMeetingCard({key: video.key}))
   }
   return (
-      <TouchableOpacity style={styles.rowItem} onLongPress={!video.addNewCard ? drag : null}
-                        onPress={video.addNewCard ? addNewCard : playSelectedMeetingVideo}>
+      <TouchableOpacity style={styles.rowItem} onLongPress={onLongClick}
+                        onPress={onClick}>
         <Animated.View
             style={{
               marginBottom: 4,
@@ -73,11 +71,17 @@ const MeetingCard = ({
               shadowRadius: isActive ? 10 : 0,
               shadowColor: isActive ? 'black' : 'transparent',
               shadowOpacity: isActive ? 0.25 : 0,
-              transform: [{scaleX: scale}, {scaleY: scale}],
+              transform: [{translateY: translation}, {rotate: rotation}],
               borderRadius: 4
             }}>
+
           {video.addNewCard ? newCard() : normalCard()}
+          {editMeeting && <TouchableOpacity
+              style={{alignSelf: 'flex-end', position: 'absolute', top: -2, right: -2}}>
+            <Icon style={{color: 'rgb(47,52,55)'}} name={'remove-circle'}
+                  onPress={removeMeetingCard}/></TouchableOpacity>}
         </Animated.View>
+
       </TouchableOpacity>
   );
 };

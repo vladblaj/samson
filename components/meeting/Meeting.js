@@ -26,6 +26,7 @@ const Meeting = (props) => {
   const {id} = props;
   const data = useSelector(state => state.meetings[id])
   const selectedTrack = useSelector(state => state.selectedTrack)
+  const editMeeting = useSelector(state => state.editMeeting)
 
   const dispatch = useDispatch();
   const array_move = (old_index, new_index) => {
@@ -44,45 +45,64 @@ const Meeting = (props) => {
     return dataClone; // for testing
   };
 
-  const addMeeting = (item) => {
+  const addMeetingCard = (item) => {
     const {video, meetingType} = item;
-    const entry = {
-      meetingType: meetingType,
-      thumbnail: video.snippet.thumbnails.default.url,
-      title: video.snippet.title,
-      publishedAt: formatDate(video.snippet.publishedAt),
-      channel: video.snippet.channelTitle,
-      videoId: video.id.videoId,
-      key: UUID()
-    }
-    dispatch(actions.addEntryToMeeting({id, entry}));
+    dispatch(actions.addEntryToMeeting({id, entry: {...video, meetingType}}));
     Actions.pop();
+  }
+
+  const toggleMeetingEdit = () => {
+    dispatch(actions.setFieldValue({name: 'editMeeting', value: true}));
+  }
+
+  const onClickAddNewCard = () => {
+    Actions.youtubeSearchOverlay({onItemSelected: addMeetingCard, meetingTypeVisible: true});
+  }
+
+  //const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
+  const onClickPlaySelectedVideo = (video) => {
+    return () => dispatch(actions.playSelectedVideo({video: video, playingIn: 'MEETING'}))
+  }
+
+  const editMeetingCard = (item) => {
+    const {video, meetingType} = item;
+    dispatch(actions.addEntryToMeeting({id, entry: {...video, meetingType}}));
+    Actions.pop();
+  }
+
+  const onClickMeetingCard = (video) => {
+    if (video.addNewCard) {
+      return onClickAddNewCard;
+    }
+    if (editMeeting) {
+      return () => Actions.youtubeSearchOverlay(
+          {onItemSelected: editMeetingCard, meetingTypeVisible: true, data: video});
+    }
+    return onClickPlaySelectedVideo(video);
+  }
+
+  const onLongClickMeetingCard = (video, drag) => {
+    return editMeeting ? drag : toggleMeetingEdit;
   }
 
   const renderItem = ({item, drag, isActive}) => {
     return (
         <MeetingCard
-            selectedTrack = {selectedTrack}
+            toggleEdit={toggleMeetingEdit}
+            selectedTrack={selectedTrack}
             video={item}
             drag={drag}
             isActive={isActive}
-            addMeeting={addMeeting}
+            addMeeting={addMeetingCard}
             scale={isActive ? animState.position : 1}
+            onClick={onClickMeetingCard(item)}
+            onLongClick={onLongClickMeetingCard(item, drag)}
         />
     );
   };
 
   const isActive = new Animated.Value(0);
-  const clock = new Clock();
-  const animConfig = {
-    damping: 20,
-    mass: 0.4,
-    stiffness: 100,
-    overshootClamping: false,
-    restSpeedThreshold: 0.2,
-    restDisplacementThreshold: 0.2,
-    toValue: new Value(0),
-  };
   const animState = {
     finished: new Value(0),
     velocity: new Value(0),
@@ -104,25 +124,6 @@ const Meeting = (props) => {
               array_move(swapItem.from, swapItem.to)
             }}
         />
-        <Animated.Code>
-          {() =>
-              block([
-                onChange(isActive, [
-                  set(animConfig.toValue, cond(isActive, 1.5, 1)),
-                  startClock(clock),
-                ]),
-                cond(clockRunning(clock), [
-                  spring(clock, animState, animConfig),
-                  cond(animState.finished, [
-                    stopClock(clock),
-                    set(animState.finished, 0),
-                    set(animState.time, 0),
-                    set(animState.velocity, 0),
-                  ]),
-                ]),
-              ])
-          }
-        </Animated.Code>
       </View>
   );
 }

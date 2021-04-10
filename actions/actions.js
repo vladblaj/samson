@@ -1,7 +1,7 @@
 import {
   ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC, PLAY_NEXT, PLAY_PREVIOUS,
-  PLAY_SELECTED_VIDEO,
+  PLAY_SELECTED_VIDEO, REMOVE_MEETING_CARD,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   TOGGLE,
@@ -68,6 +68,13 @@ const playPrevious = (data) => async dispatch => {
   })
 }
 
+const removeMeetingCard = (data) => async dispatch => {
+  dispatch({
+    type: REMOVE_MEETING_CARD,
+    payload: data
+  })
+}
+
 export default {
   toggleOverlay,
   toggle,
@@ -77,5 +84,6 @@ export default {
   setMeetingData,
   addEntryToMeeting,
   playNext,
-  playPrevious
+  playPrevious,
+  removeMeetingCard
 }

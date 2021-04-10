@@ -7,13 +7,14 @@ import YoutubeSearch from "../youtube-search/YoutubeSearch";
 import {Actions} from "react-native-router-flux";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {THEME} from "../../color-theme";
+import {formatDate, UUID} from "../../utils";
 
 const Overlay = (props) => {
   const {onItemSelected, meetingTypeVisible} = props;
   const [opacity, setOpacity] = useState(new Animated.Value(0));
-  const [selectedMeetingType, setSelectedMeetingType] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState();
-  const [selectedVideoLabel, setSelectedVideoLabel] = useState(`Video: ${props.data?props.data.title:''}`);
+  const [selectedMeetingType, setSelectedMeetingType] = useState(props.data && props.data.meetingType);
+  const [selectedVideo, setSelectedVideo] = useState(props.data);
+  const [selectedVideoLabel, setSelectedVideoLabel] = useState(`Video: ${props.data ? props.data.title : ''}`);
   const meetingTypes = useSelector(state => state.meetingTypes)
 
   useEffect(() => {
@@ -31,8 +32,16 @@ const Overlay = (props) => {
   }
 
   const setVideoItem = (video) => {
+    const entry = {
+      thumbnail: video.snippet.thumbnails.default.url,
+      title: video.snippet.title,
+      publishedAt: formatDate(video.snippet.publishedAt),
+      channel: video.snippet.channelTitle,
+      videoId: video.id.videoId,
+      key: props.data ? props.data.key : UUID()
+    }
     setSelectedVideoLabel(`Video: ${video.snippet.title}`);
-    setSelectedVideo(video);
+    setSelectedVideo(entry);
   }
   const renderOk = () => {
     return (
@@ -84,8 +93,7 @@ const Overlay = (props) => {
           </View>
           <View style={styles.buttons}>
             {renderClose()}
-            {renderOk(
-                meetingTypeVisible ? selectedMeetingType == null || selectedVideo == null : selectedVideo == null)}
+            {renderOk()}
           </View>
         </View>
       </Animated.View>

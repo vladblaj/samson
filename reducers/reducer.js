@@ -4,6 +4,7 @@ import {
   PLAY_NEXT,
   PLAY_PREVIOUS,
   PLAY_SELECTED_VIDEO,
+  REMOVE_MEETING_CARD,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   TOGGLE
@@ -68,6 +69,7 @@ export const initialState = {
     }]
   },
   videoState: null,
+  editMeeting: false,
   meetingTypes: [
     {label: 'Entrance of Officers', value: 'Entrance of Officers'},
     {label: 'Opening Ode', value: 'Opening Ode'},
@@ -91,7 +93,6 @@ const nextShuffledTrack = (tracks, selectedTrack) => {
     return 0;
   }
   const nextRandomTrackIndex = randomInteger(0, tracks.length - 1);
-  console.log(nextRandomTrackIndex);
   if (tracks[nextRandomTrackIndex].key === selectedTrack.key) {
     return nextShuffledTrack(tracks, selectedTrack);
   }
@@ -148,8 +149,6 @@ const playPrevious = (state) => {
   if (previousTracks.length > 1) {
     previousTracks.pop();
   }
-
-  console.log(previousTracks.length)
   if (!state.previousTracks) {
     previous = state.selectedTrack
   } else {
@@ -198,16 +197,33 @@ const reducer = (state = initialState, action) => {
       };
     }
     case  ADD_ENTRY_TO_MEETING: {
+      const replIndex = state.meetings[state.selectedMeeting].findIndex(tr => tr.key === action.payload.entry.key)
+      if (replIndex === -1) {
+        return {
+          ...state,
+          meetings: {[action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]}
+        };
+      }
       return {
         ...state,
-        meetings: {[action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]}
+        meetings: {
+          [action.payload.id]: state.meetings[state.selectedMeeting].map(
+              (video, index) => index === replIndex ? action.payload.entry : video)
+        }
       };
     }
     case PLAY_NEXT:
       return playNext(state);
     case PLAY_PREVIOUS:
       return playPrevious(state);
-
+    case REMOVE_MEETING_CARD:
+      return {
+        ...state,
+        meetings: {
+          [state.selectedMeeting]: state.meetings[state.selectedMeeting].filter(
+              meeting => meeting.key !== action.payload.key)
+        }
+      }
     default:
       return state;
   }

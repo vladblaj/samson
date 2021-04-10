@@ -5,7 +5,6 @@ import {useDispatch} from "react-redux";
 import actions from "../../actions/actions";
 import {Actions} from "react-native-router-flux";
 import {THEME} from "../../color-theme";
-import {formatDate} from "../../utils";
 
 const CellElement = props => {
   const {id, video, selectedTrack} = props;
@@ -20,15 +19,7 @@ const CellElement = props => {
 
   const addToCircumstantialMusic = (item) => {
     const {video} = item;
-    const entry = {
-      thumbnail: video.snippet.thumbnails.default.url,
-      title: video.snippet.title,
-      publishedAt: formatDate(video.snippet.publishedAt),
-      channel: video.snippet.channelTitle,
-      videoId: video.id.videoId,
-      key: id
-    }
-    dispatch(actions.addToCircumstantialMusic({id, entry}));
+    dispatch(actions.addToCircumstantialMusic({id, entry: {...video, key:id}}));
     Actions.pop()
   }
 
