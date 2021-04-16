@@ -4,7 +4,6 @@ import {Input, Item, View} from "native-base";
 import VideoList from "./VideoList";
 import {getYoutubeSearchResults} from '../../api/YoutubeApi'
 import {THEME} from "../../color-theme";
-const API_KEY = 'AIzaSyCvchGhGdg1zZYciEFkRrWcKpCZ3CSdTZs';
 
 const YoutubeSearch = props => {
   const [videos, setVideos] = useState([]);
