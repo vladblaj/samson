@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Body, Button, Header, Icon, Left, Right, Text, Title, View} from "native-base";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,18 +7,20 @@ import actions from "../../actions/actions";
 import {Actions} from "react-native-router-flux";
 
 const SamsonHeader = () => {
-  const dispatch = useDispatch()
+  const [isDrawerOpened, setIsDrawerOpened] = useState(false);
+  const dispatch = useDispatch();
   const editMeeting = useSelector(state => state.editMeeting);
   const displayEditMeetingControls = () => {
     return (<View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
-      <Button small success onPress={() => { dispatch(actions.setFieldValue({name: 'editMeeting', value: false}));}} >
+      <Button small success onPress={() => {
+        dispatch(actions.setFieldValue({name: 'editMeeting', value: false}));
+      }}>
         <Text>Save</Text>
       </Button></View>);
   }
   const displayYoutubeIcon = () => {
     return (<View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
       <TouchableOpacity onPress={() => {
-        Actions.pop();
         dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: true}));
       }}>
         <Icon name={'logo-youtube'} style={{color: THEME.FILLER_COLOR}}/>

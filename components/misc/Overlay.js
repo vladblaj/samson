@@ -45,7 +45,7 @@ const Overlay = (props) => {
   }
   const renderOk = () => {
     return (
-        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, justifyContent: 1}}
+        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, height:39,  justifyContent: 1}}
                 onPress={() => onItemSelected({video: selectedVideo, meetingType: selectedMeetingType})}>
           <Text>Ok</Text>
         </Button>
@@ -56,6 +56,7 @@ const Overlay = (props) => {
         <Button danger onPress={Actions.pop} style={{
           backgroundColor: THEME.SECONDARY_COLOR,
           width: 90,
+          height: 38,
           justifyContent: 1
         }}><Text> Cancel </Text></Button>
     );
@@ -112,7 +113,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   content: {
     width: '100%',
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'absolute',
-    top: 100,
     left: 0,
     backgroundColor: 'rgba(43,46,74, 0.5)'
   },

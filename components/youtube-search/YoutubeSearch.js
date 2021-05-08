@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.FILLER_COLOR,
   },
   videoList:{
-    height: 400
+    height: 330
   },
   container: {
     opacity: 1,

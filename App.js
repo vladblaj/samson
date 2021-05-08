@@ -1,7 +1,9 @@
 import React from 'react';
 import SamsonApp from "./components/app-base/SamsonApp";
-import {Lightbox, Router, Scene} from "react-native-router-flux";
+import {Drawer, Lightbox, Router, Scene} from "react-native-router-flux";
 import Overlay from "./components/misc/Overlay";
+import SideMenu from "./components/side-menu/SideMenu";
+import SamsonHeader from "./components/app-base/SamsonHeader";
 
 export default function App() {
   return (

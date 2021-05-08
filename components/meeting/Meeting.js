@@ -6,24 +6,13 @@ import MeetingCard from "./MeetingCard";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
 import {THEME} from "../../color-theme";
-import {formatDate, UUID} from "../../utils";
 import {Actions} from "react-native-router-flux";
 
 const Meeting = (props) => {
   const {
-    block,
-    set,
-    onChange,
-    Clock,
     Value,
-    startClock,
-    stopClock,
-    clockRunning,
-    cond,
-    spring,
-
   } = Animated;
-  const {id} = props;
+  const id = useSelector(state => state.selectedMeeting)
   const data = useSelector(state => state.meetings[id])
   const selectedTrack = useSelector(state => state.selectedTrack)
   const editMeeting = useSelector(state => state.editMeeting)

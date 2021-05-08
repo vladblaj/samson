@@ -1,10 +1,13 @@
 import {
+  ADD_EMTPY_CATEGORY,
   ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
+  DELETE_SELECTED_CATEGORY, DUPLICATE_SELECTED_CATEGORY,
   PLAY_NEXT,
   PLAY_PREVIOUS,
   PLAY_SELECTED_VIDEO,
   REMOVE_MEETING_CARD,
+  SAVE_CATEGORY,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   TOGGLE
@@ -63,11 +66,12 @@ export const initialState = {
   tracks: [],
   previousTracks: [],
   meetings: {
-    [1]: [{
-      key: UUID(),
+    ['1']: [{
+      key: '1',
       addNewCard: true
     }]
   },
+  categories: [{id: '1', name: '1st Degree Meeting'}],
   videoState: null,
   editMeeting: false,
   meetingTypes: [
@@ -201,12 +205,16 @@ const reducer = (state = initialState, action) => {
       if (replIndex === -1) {
         return {
           ...state,
-          meetings: {[action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]}
+          meetings: {
+            ...state.meetings,
+            [action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]
+          }
         };
       }
       return {
         ...state,
         meetings: {
+          ...state.meetings,
           [action.payload.id]: state.meetings[state.selectedMeeting].map(
               (video, index) => index === replIndex ? action.payload.entry : video)
         }
@@ -224,6 +232,46 @@ const reducer = (state = initialState, action) => {
               meeting => meeting.key !== action.payload.key)
         }
       }
+    case ADD_EMTPY_CATEGORY: {
+      const id = UUID();
+      return {
+        ...state,
+        categories: [...state.categories, {id, isEmpty: true}],
+        meetings: {
+          ...state.meetings, [id]: [{
+            key: id,
+            addNewCard: true
+          }]
+        }
+      }
+    }
+    case SAVE_CATEGORY: {
+      return {
+        ...state,
+        categories: state.categories.map(
+            category => category.id === action.payload.id ? action.payload : category)
+      }
+    }
+    case DELETE_SELECTED_CATEGORY: {
+      return {
+        ...state,
+        categories: state.categories.filter(category => category.id !== state.selectedMeeting),
+        selectedMeeting: state.categories.length >= 1 ? state.categories[0].id : null
+      }
+    }
+    case DUPLICATE_SELECTED_CATEGORY: {
+      const newId = UUID();
+      const currentCategory = state.categories.find(cat=>cat.id === state.selectedMeeting);
+      return {
+        ...state,
+
+        categories: [...state.categories,{id:newId, name: currentCategory.name }],
+        meetings: {...state.meetings,[newId]: state.meetings[state.selectedMeeting]},
+        selectedMeeting: newId
+      }
+    }
+
+
     default:
       return state;
   }
