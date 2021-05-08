@@ -30,8 +30,16 @@ const SamsonHeader = () => {
   return (
       <Header style={styles.header}>
         <Left>
-          <Button transparent>
-            <Icon style={{color: THEME.FILLER_COLOR}} name='menu'/>
+          <Button transparent onPress={() => {
+            if (isDrawerOpened) {
+              Actions.drawerClose()
+            }
+            if (!isDrawerOpened) {
+              Actions.drawerOpen()
+            }
+            setIsDrawerOpened(!isDrawerOpened);
+          }}>
+            <Icon style={{color: THEME.FILLER_COLOR}} name='menu' />
           </Button>
         </Left>
         <Body>
