@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+    }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+    }
+    .video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="video" id="player" />
+</div>
+
+<script>
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      tmp = item.split("=");
+      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+  }
+
+  const videoId_s = findGetParameter("videoId_s");
+  const end = findGetParameter("end");
+  const rel_s = findGetParameter("rel_s");
+  const loop_s = findGetParameter("loop_s");
+  const color = findGetParameter("color");
+  const start = findGetParameter("start");
+  const list = findGetParameter("list");
+  const playerLang = findGetParameter("playerLang");
+  const listType = findGetParameter("listType");
+  const controls_s = findGetParameter("controls_s");
+  const preventFullScreen_s = findGetParameter("preventFullScreen_s");
+  const cc_lang_pref_s = findGetParameter("cc_lang_pref_s");
+  const iv_load_policy = findGetParameter("iv_load_policy");
+  const modestbranding_s = findGetParameter("modestbranding_s");
+  const showClosedCaptions_s = findGetParameter("showClosedCaptions_s");
+
+  var tag = document.createElement("script");
+
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName("script")[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player("player", {
+      width: "1000",
+      height: "1000",
+      videoId: videoId_s,
+      playerVars: {
+        end: end,
+        rel: rel_s,
+        playsinline: 1,
+        loop: loop_s,
+        color: color,
+        start: start,
+        list: list,
+        hl: playerLang,
+        listType: listType,
+        controls: controls_s,
+        fs: preventFullScreen_s,
+        cc_lang_pref: cc_lang_pref_s,
+        iv_load_policy: iv_load_policy,
+        modestbranding: modestbranding_s,
+        cc_load_policy: showClosedCaptions_s,
+      },
+      events: {
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange,
+        onError: onPlayerError,
+        onPlaybackQualityChange: onPlaybackQualityChange,
+        onPlaybackRateChange: onPlaybackRateChange,
+      },
+    });
+  }
+
+  function onPlayerError(event) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ eventType: "playerError", data: event.data })
+    );
+  }
+
+  function onPlaybackRateChange(event) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ eventType: "playbackRateChange", data: event.data })
+    );
+  }
+
+  function onPlaybackQualityChange(event) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ eventType: "playerQualityChange", data: event.data })
+    );
+  }
+
+  function onPlayerReady(event) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ eventType: "playerReady" })
+    );
+  }
+
+  var done = false;
+  function onPlayerStateChange(event) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ eventType: "playerStateChange", data: event.data })
+    );
+  }
+
+  var isFullScreen = false;
+  function onFullScreenChange() {
+    isFullScreen =
+        document.fullscreenElement ||
+        document.mozFullScreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement;
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          eventType: "fullScreenChange",
+          data: Boolean(isFullScreen),
+        })
+    );
+  }
+
+  document.addEventListener("fullscreenchange", onFullScreenChange);
+  document.addEventListener("mozfullscreenchange", onFullScreenChange);
+  document.addEventListener("msfullscreenchange", onFullScreenChange);
+  document.addEventListener("webkitfullscreenchange", onFullScreenChange);
+</script>
+</body>
+</html>
