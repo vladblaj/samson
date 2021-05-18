@@ -2,47 +2,39 @@ import React from 'react';
 import {StyleSheet, Text, View,} from 'react-native';
 import Slider from "@react-native-community/slider";
 import {THEME} from "../../color-theme";
-
-function pad(n, width, z = 0) {
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-}
-
-const minutesAndSeconds = (position) => ([
-  pad(Math.floor(position / 60), 2),
-  pad(position % 60, 2),
-]);
+import {minutesAndSeconds} from "../../utils";
 
 const SeekBar = ({
-  trackLength,
   currentPosition,
   onSlidingComplete,
   onSlidingStart,
-  onValueChange
+  onValueChange,
+  videoStart,
+  videoEnd,
+  videoCropped
 }) => {
-  const elapsed = minutesAndSeconds(currentPosition);
-  const remaining = minutesAndSeconds(trackLength - currentPosition);
   return (
       <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.text}>
-            {elapsed[0] + ":" + elapsed[1]}
+            {minutesAndSeconds(currentPosition)}
           </Text>
           <View style={{flex: 1}}/>
-          <Text style={[styles.text, {width: 50}]}>
-            {trackLength > 1 && "-" + remaining[0] + ":" + remaining[1]}
+          <Text style={[styles.text, {width: 65}]}>
+            {videoEnd > 1 && "-" + minutesAndSeconds(videoEnd-currentPosition)}
           </Text>
         </View>
         <Slider
-            maximumValue={Math.max(trackLength, 1, currentPosition + 1)}
+            maximumValue={videoEnd}
+            minimumValue={videoStart}
             onSlidingStart={onSlidingStart}
             onSlidingComplete={onSlidingComplete}
             onValueChange={onValueChange}
             value={currentPosition}
             style={styles.slider}
-            minimumTrackTintColor={THEME.FILLER_COLOR}
-            maximumTrackTintColor={THEME.FILLER_COLOR}
-            thumbTintColor={THEME.FILLER_COLOR}
+            minimumTrackTintColor={videoCropped?THEME.SELECTED:THEME.WHITE}
+            maximumTrackTintColor={videoCropped?THEME.SELECTED:THEME.WHITE}
+            thumbTintColor={videoCropped?THEME.SELECTED: THEME.WHITE}
             thumbStyle={styles.thumb}
             trackStyle={styles.track}/>
       </View>
@@ -68,11 +60,9 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    color: THEME.FILLER_COLOR,
-    backgroundColor: THEME.FILLER_COLOR,
   },
   text: {
-    color:  THEME.FILLER_COLOR,
+    color: THEME.FILLER_COLOR,
     fontSize: 12,
     textAlign: 'center',
 

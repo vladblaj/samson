@@ -11,7 +11,7 @@ const SamsonContextProvider = ({children}) => {
   const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    blacklist: ['navigation']
+    blacklist: ['navigation','paused']
   }
   const persistedReducer = persistReducer(persistConfig, reducer)
 

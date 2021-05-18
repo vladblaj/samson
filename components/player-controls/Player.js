@@ -15,8 +15,13 @@ const Player = (props) => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [timer, setTimer] = useState(0);
   const playerRef = props.ytFrameRef;
-
+  const trackLength = store.selectedTrack?store.selectedTrack.end || store.selectedTrack.duration:1;
+  const getVideoStart = () => {
+    return store.selectedTrack?.start || 0;
+  }
+  const videoStart = getVideoStart();
   const fetchCurrentTime = async () => {
+    console.log('will fetch current time');
     const currentTime = await playerRef.current?.getCurrentTime();
     setCurrentPositionBounded(currentTime);
   }
@@ -35,6 +40,7 @@ const Player = (props) => {
 
   useEffect(() => {
     if (!store.paused && store.videoState === 'ready') {
+      console.log('store-ul nu e paused');
       startFetchingCurrentTime();
     }
     if (store.paused) {
@@ -64,7 +70,6 @@ const Player = (props) => {
     setCurrentPosition(Math.floor(time));
   }
 
-
   const onBack = () => {
     seek(0);
     setCurrentPositionBounded(0);
@@ -89,6 +94,7 @@ const Player = (props) => {
   const onSlidingStart = () => {
     stopFetchingCurrentTime();
   }
+  const videoCropped = store.selectedTrack?store.selectedTrack.start || store.selectedTrack.end: false;
   return (
 
       <View style={styles.container}>
@@ -96,10 +102,12 @@ const Player = (props) => {
         <StatusBar hidden={true}/>
 
         <SeekBar
+            videoCropped={videoCropped}
+            videoStart={videoStart}
+            videoEnd={trackLength}
             onSlidingStart={onSlidingStart}
             onSlidingComplete={onSlidingComplete}
             onValueChange={onValueChange}
-            trackLength={store.duration}
             currentPosition={currentPosition}/>
         <Controls
             onPressRepeat={() => dispatch(actions.toggle({name: 'repeatOn'}))}

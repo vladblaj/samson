@@ -1,13 +1,17 @@
-import React , {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import { ScrollView, StyleSheet} from 'react-native';
 import {Input, Item, View} from "native-base";
 import VideoList from "./VideoList";
 import {getYoutubeSearchResults} from '../../api/YoutubeApi'
 import {THEME} from "../../color-theme";
+import { debounce } from "lodash";
 
 const YoutubeSearch = props => {
+
   const [videos, setVideos] = useState([]);
   const [searchTerm, setSearchTerm] = useState(null);
+  const onChangeSearchTerm = useCallback(debounce((value)=>searchOnYoutube(value), 3000), []);
+
   const searchOnYoutube = async (term) => {
     const results = await getYoutubeSearchResults(term)
     setVideos(results.data.items);
@@ -20,7 +24,7 @@ const YoutubeSearch = props => {
         <Item>
           <Input style={styles.searchInput} placeholder="Search" returnKeyType="search"
                  value={searchTerm}
-                 onChangeText={searchOnYoutube}/>
+                 onChangeText={onChangeSearchTerm}/>
         </Item>
 
         <ScrollView style={[styles.videoList]}>
@@ -39,11 +43,11 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.FILLER_COLOR,
   },
   videoList:{
-    height: 330
+    marginTop: 10,
   },
   container: {
     opacity: 1,
-    width: '80%',
+    width: '100%',
     backgroundColor: THEME.SECONDARY_COLOR
 
   },

@@ -1,6 +1,6 @@
 import {Animated, Image, StyleSheet, Text, TouchableOpacity} from "react-native";
 
-import React, {useState} from "react";
+import React from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Icon, Thumbnail, Title, View} from "native-base";
 import {THEME} from "../../color-theme";
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   meetingNameText: {
-    color: THEME.FILLER_COLOR,
+    color: THEME.WHITE,
     fontSize: 16
   },
   rowItem: {
@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: THEME.FILLER_COLOR,
+    color: THEME.WHITE,
   },
   textDetails: {
-    color: THEME.FILLER_COLOR,
+    color: THEME.WHITE,
 
   },
 });

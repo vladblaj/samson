@@ -14,13 +14,18 @@ const YoutubeMovable = props => {
   const [playerState, setPlayerState] = useState();
 
   useEffect(() => {
+
     if (playerState === 'playing') {
       if (props.ytFrameRef && props.ytFrameRef.current.getDuration()) {
-        props.ytFrameRef.current.getDuration().then(
-            currentDuration => {
-              dispatch(actions.setFieldValue({name: 'duration', value: Math.floor(currentDuration)}));
-            }
-        );
+        if(!store.selectedTrack.duration){
+          console.log('will get duration');
+          props.ytFrameRef.current.getDuration().then(
+              currentDuration => {
+                store.selectedTrack.duration = currentDuration;
+                dispatch(actions.updateDurationForVideo(store.selectedTrack));
+              }
+          );
+        }
       }
     }
 
@@ -37,6 +42,10 @@ const YoutubeMovable = props => {
     dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: false}));
     e.stopPropagation();
   }
+
+  const start = store.selectedTrack?store.selectedTrack.start:null;
+  const end =  store.selectedTrack?store.selectedTrack.end:null;
+  const key = store.selectedTrack?`${store.selectedTrack.key}${start}${end}`:1;
   return (
       <MovableView isVisible={store.isYoutubeVisible}>
           <TouchableOpacity style={styles.minimize} onPress={minimize}>
@@ -45,9 +54,10 @@ const YoutubeMovable = props => {
           </TouchableOpacity>
           <View pointerEvents="none">
             <YoutubePlayer
+                key={key}
+                baseUrlOverride={'https://smash93.github.io/hostedYoutubeFiles/youtube-host.html'}
                 onChangeState={setDurationOnStateChange}
                 onReady={() => {
-                  props.ytFrameRef.current.seekTo(0);
                   dispatch(actions.setFieldValue({name: 'videoState', value: 'ready'}));
                 }}
                 ref={props.ytFrameRef}
@@ -55,7 +65,8 @@ const YoutubeMovable = props => {
                 width={400}
                 play={!store.paused}
                 videoId={store.selectedTrack?store.selectedTrack.videoId:null}
-                initialPlayerParams={{controls: 0}}
+                initialPlayerParams={{controls: 0, start, end}}
+                webViewProps={{mediaPlaybackRequiresUserAction:false}}
             />
           </View>
       </MovableView>

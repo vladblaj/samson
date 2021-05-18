@@ -2,7 +2,8 @@ import {
   ADD_EMTPY_CATEGORY,
   ADD_ENTRY_TO_MEETING,
   ADD_TO_CIRCUMSTANTIAL_MUSIC,
-  DELETE_SELECTED_CATEGORY, DUPLICATE_SELECTED_CATEGORY,
+  DELETE_SELECTED_CATEGORY,
+  DUPLICATE_SELECTED_CATEGORY,
   PLAY_NEXT,
   PLAY_PREVIOUS,
   PLAY_SELECTED_VIDEO,
@@ -10,9 +11,11 @@ import {
   SAVE_CATEGORY,
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
-  TOGGLE
+  TOGGLE,
+  UPDATE_DURATION_FOR_VIDEO
 } from "./actionConstants";
 import {UUID} from "../utils";
+import {THEME} from "../color-theme";
 
 const mockItem = {
   "kind": "youtube#searchResult",
@@ -55,12 +58,11 @@ export const initialState = {
   searchOverlay: false,
   count: 0,
   paused: true,
-  duration: 0,
   selectedTrack: null,
   repeatOn: false,
   shuffleOn: false,
   playerRef: null,
-  isYoutubeVisible: true,
+  isYoutubeVisible: false,
   playingIn: null,
   selectedMeeting: 1,
   tracks: [],
@@ -74,6 +76,7 @@ export const initialState = {
   categories: [{id: '1', name: '1st Degree Meeting'}],
   videoState: null,
   editMeeting: false,
+  isLightTheme: false,
   meetingTypes: [
     {label: 'Entrance of Officers', value: 'Entrance of Officers'},
     {label: 'Opening Ode', value: 'Opening Ode'},
@@ -84,7 +87,8 @@ export const initialState = {
     {label: 'Balloting', value: 'Balloting'},
     {label: 'PGM or A/PGM Admission', value: 'PGM or A/PGM Admission'},
     {label: 'In Memoriam', value: 'In Memoriam'},
-  ]
+  ],
+  theme: THEME
 }
 const randomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -167,19 +171,29 @@ const playPrevious = (state) => {
 
 }
 const reducer = (state = initialState, action) => {
+  console.log('Action:',action.type);
   switch (action.type) {
     case SET_FIELD_VALUE:
       return {...state, [action.payload.name]: action.payload.value};
     case TOGGLE:
       return {...state, [action.payload.name]: !state[action.payload.name]};
     case ADD_TO_CIRCUMSTANTIAL_MUSIC:
-      const replIndex = state.tracks.findIndex(tr => tr.key === action.payload.entry.key)
+      const currentTrack = state.selectedTrack && state.selectedTrack.key === action.payload.entry.key
+          ? action.payload.entry
+          : state.selectedTrack;
+      let replIndex = state.tracks.findIndex(tr => tr.key === action.payload.entry.key)
       if (replIndex === -1) {
-        return {...state, tracks: [...state.tracks, action.payload.entry]};
+        return {
+          ...state,
+          selectedTrack: currentTrack,
+          tracks: [...state.tracks, action.payload.entry]
+        };
       }
       return {
         ...state,
-        tracks: state.tracks.map((track, index) => index === replIndex ? action.payload.entry : track)
+        selectedTrack: currentTrack,
+        tracks: state.tracks.map((track, index) => index === replIndex ? action.payload.entry : track),
+
       };
     case PLAY_SELECTED_VIDEO: {
       const previousTracks = JSON.parse(JSON.stringify([...state.previousTracks, action.payload.video] || []));
@@ -201,10 +215,13 @@ const reducer = (state = initialState, action) => {
       };
     }
     case  ADD_ENTRY_TO_MEETING: {
-      const replIndex = state.meetings[state.selectedMeeting].findIndex(tr => tr.key === action.payload.entry.key)
-      if (replIndex === -1) {
+      const selected = state.selectedTrack && state.selectedTrack.key === action.payload.entry.key
+          ? action.payload.entry : state.selectedTrack;
+      const replIndex2 = state.meetings[state.selectedMeeting].findIndex(tr => tr.key === action.payload.entry.key)
+      if (replIndex2 === -1) {
         return {
           ...state,
+          selectedTrack: selected,
           meetings: {
             ...state.meetings,
             [action.payload.id]: [action.payload.entry, ...state.meetings[action.payload.id]]
@@ -213,10 +230,11 @@ const reducer = (state = initialState, action) => {
       }
       return {
         ...state,
+        selectedTrack: selected,
         meetings: {
           ...state.meetings,
           [action.payload.id]: state.meetings[state.selectedMeeting].map(
-              (video, index) => index === replIndex ? action.payload.entry : video)
+              (video, index) => index === replIndex2 ? action.payload.entry : video)
         }
       };
     }
@@ -255,22 +273,49 @@ const reducer = (state = initialState, action) => {
     case DELETE_SELECTED_CATEGORY: {
       return {
         ...state,
+        paused:true,
         categories: state.categories.filter(category => category.id !== state.selectedMeeting),
         selectedMeeting: state.categories.length >= 1 ? state.categories[0].id : null
       }
     }
     case DUPLICATE_SELECTED_CATEGORY: {
       const newId = UUID();
-      const currentCategory = state.categories.find(cat=>cat.id === state.selectedMeeting);
+      const currentCategory = state.categories.find(cat => cat.id === state.selectedMeeting);
       return {
         ...state,
-
-        categories: [...state.categories,{id:newId, name: currentCategory.name }],
-        meetings: {...state.meetings,[newId]: state.meetings[state.selectedMeeting]},
+        paused:true,
+        categories: [...state.categories, {id: newId, name: currentCategory.name}],
+        meetings: {...state.meetings, [newId]: state.meetings[state.selectedMeeting]},
         selectedMeeting: newId
       }
     }
-
+    case UPDATE_DURATION_FOR_VIDEO: {
+      const currentMeeting = JSON.parse(JSON.stringify(state.meetings[state.selectedMeeting]));
+      const currentTracks = JSON.parse(JSON.stringify(state.tracks));
+      const selectedTrack = JSON.parse(JSON.stringify(state.selectedTrack));
+      if(selectedTrack)
+      {
+        if(selectedTrack.videoId === action.payload.videoId){
+          selectedTrack.duration = action.payload.duration;
+        }
+      }
+      currentMeeting.forEach(video => {
+        if (video.videoId === action.payload.videoId) {
+          video.duration = action.payload.duration
+        }
+      });
+      currentTracks.forEach(video => {
+        if (video.videoId === action.payload.videoId) {
+          video.duration = action.payload.duration
+        }
+      });
+      return {
+        ...state,
+        selectedTrack: selectedTrack,
+        meetings: {...state.meetings, [state.selectedMeeting]: currentMeeting},
+        tracks: currentTracks
+      }
+    }
 
     default:
       return state;

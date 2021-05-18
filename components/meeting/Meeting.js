@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Animated from 'react-native-reanimated';
 import MeetingCard from "./MeetingCard";
@@ -16,7 +16,6 @@ const Meeting = (props) => {
   const data = useSelector(state => state.meetings[id])
   const selectedTrack = useSelector(state => state.selectedTrack)
   const editMeeting = useSelector(state => state.editMeeting)
-
   const dispatch = useDispatch();
   const array_move = (old_index, new_index) => {
     const dataClone = JSON.parse(JSON.stringify(data));

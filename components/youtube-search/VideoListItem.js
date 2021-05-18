@@ -1,6 +1,6 @@
 import React from 'react';
 import {ListItem, Title, View} from "native-base";
-import {Image, StyleSheet, Text} from "react-native";
+import {Image, StyleSheet, Text, TouchableOpacity} from "react-native";
 import {THEME} from "../../color-theme";
 import {formatDate} from "../../utils";
 
@@ -14,14 +14,13 @@ const VideoListItem = ({video, onVideoSelect}) => {
   let date = formatDate(video.snippet.publishedAt);
 
   return (
-      <ListItem onPress={() => onVideoSelect(video)} style={styles.listGroupItemListItemCustom}>
-        <View style={styles.container}>
-          <View style={styles.thumbnail}>
+      <TouchableOpacity onPress={() => onVideoSelect(video)}  style={styles.container}>
+          <View>
             <Image style={{width, height}} source={{uri: imageUrl}}/>
           </View>
           <View style={styles.mediaBody}>
             <View style={styles.mediaTitle}>
-              <Title numberOfLines={4} style={styles.title}>{video.snippet.title}</Title>
+              <Title numberOfLines={2} style={styles.title}>{video.snippet.title}</Title>
             </View>
             <View style={styles.mediaChannelTitle}>
               <Text style={styles.textDetails}>{video.snippet.channelTitle}</Text>
@@ -30,8 +29,7 @@ const VideoListItem = ({video, onVideoSelect}) => {
               <Text style={styles.textDetails}>{date}</Text>
             </View>
           </View>
-        </View>
-      </ListItem>
+      </TouchableOpacity>
   );
 };
 
@@ -39,9 +37,11 @@ const styles = StyleSheet.create({
   text: {margin: 6},
   videoListMedia: {flex: 1},
   container: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
     flexDirection: 'row',
-
+    marginVertical: 6,
   },
   mediaBody: {
     flex: 1,
@@ -49,9 +49,8 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
   },
   mediaTitle: {
-    margin: 5,
     flexGrow: 2,
-    flexBasis: 70
+    flexBasis: 70,
   },
   mediaChannelTitle: {
     marginLeft: 10,
@@ -64,15 +63,13 @@ const styles = StyleSheet.create({
     flexBasis: 20
   },
   title: {
-    color: THEME.FILLER_COLOR,
+    color: THEME.WHITE,
     fontWeight: 'bold',
   },
   textDetails: {
-    color: THEME.FILLER_COLOR,
+    color: THEME.WHITE,
 
   },
-  thumbnail: {},
   mediaObject: {width: 100, height: 100},
-  listGroupItemListItemCustom: {}
 });
 export default VideoListItem;

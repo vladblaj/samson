@@ -4,6 +4,7 @@ import {Button} from 'native-base';
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
 import {MeetingCategory} from "./MeetingCategory";
+import {THEME} from "../../color-theme";
 
 const DATA = [
   {
@@ -50,7 +51,7 @@ const MeetingCategoryList = (props) => {
                   keyExtractor={item => item.id}
         />
         <View style={styles.controlButtons}>
-          <Button onPress={addNewCategory} primary small style={{width: 90, justifyContent: 1}}>
+          <Button color = {THEME.FILLER_COLOR} onPress={addNewCategory}  small style={{width: 90, justifyContent: 1}}>
             <Text>Add</Text>
           </Button>
           <Button danger onPress={deleteCategory} small  style={{width: 90, justifyContent: 1}}>
@@ -65,6 +66,7 @@ const MeetingCategoryList = (props) => {
 }
 const styles = StyleSheet.create({
   controlButtons: {
+    color: THEME.FILLER_COLOR,
     justifyContent: 'center',
     flexDirection: 'row'
   },

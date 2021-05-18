@@ -6,7 +6,7 @@ import {THEME} from "../../color-theme";
 export const MeetingCategory = (props) => {
   const {item, save, setSelectedCategory, selected} = props;
   const [name, setName] = useState();
-  return (<View style={[styles.item, {backgroundColor: selected ? '#f9c2ff' : THEME.FILLER_COLOR}]}>
+  return (<View style={[styles.item, {backgroundColor: selected ? THEME.SELECTED : THEME.FILLER_COLOR}]}>
     {item.isEmpty ? (
             <Item>
               <Input style={{height: '75%'}} placeholder='Category Name' onChangeText={setName}/>

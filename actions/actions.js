@@ -11,7 +11,8 @@ import {
   SET_FIELD_VALUE,
   SET_MEETING_DATA,
   TOGGLE,
-  TOGGLE_OVERLAY
+  TOGGLE_OVERLAY,
+  UPDATE_DURATION_FOR_VIDEO
 } from "../reducers/actionConstants";
 
 const toggle = data => async dispatch => {
@@ -102,6 +103,12 @@ const duplicateSelectedCategory = () => async dispatch => {
     type: DUPLICATE_SELECTED_CATEGORY,
   })
 }
+const updateDurationForVideo = (data) => async dispatch => {
+  dispatch({
+    type: UPDATE_DURATION_FOR_VIDEO,
+    payload:data
+  })
+}
 export default {
   toggleOverlay,
   toggle,
@@ -116,5 +123,6 @@ export default {
   addEmptyCategory,
   saveCategory,
   deleteSelectedCategory,
-  duplicateSelectedCategory
+  duplicateSelectedCategory,
+  updateDurationForVideo,
 }

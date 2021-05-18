@@ -11,6 +11,7 @@ const headers = {'Accept':'application/json'}
 const baseURL = 'https://youtube.googleapis.com/youtube';
 const version = '/v3';
 const search_youtube = '/search'
+const video_details = '/videos'
 
 const requestTypes = {
   GET: 'GET',
@@ -24,10 +25,20 @@ const requestTypes = {
  //   &q=GoogleDevelopers
 
 export const getYoutubeSearchResults = async (searchString) => {
+  if(!searchString)
+    return;
   const encodedSearchString = encodeURI(searchString);
-  console.log(`URL IS: ${baseURL}${version}${search_youtube}?type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`)
-  console.log(`MOck Data is: ${mockYoutubeList}`)
-  //const res = await axios.get(`${baseURL}${version}${search_youtube}?type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`,{headers});
-  //return res;
-  return mockYoutubeList
+  console.log(`MOck Data is: ${searchString}`)
+  console.log(`URL IS: ${baseURL}${version}${search_youtube}?videoEmbeddable=true&type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`)
+
+  //const res = await axios.get(`${baseURL}${version}${search_youtube}?videoEmbeddable=true&type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`,{headers});
+  //console.log(res);
+  return mockYoutubeList;
+}
+
+export const getYoutubeVideoDuration = async (videoId) => {
+  const encodedSearchString = encodeURI(videoId);
+  console.log('will make a request to', `${baseURL}${version}${video_details}?videoEmbeddable=true&part=contentDetails&id=${videoId}&key=${API_KEY}`);
+  const res = await axios.get(`${baseURL}${version}${video_details}?videoEmbeddable=true&part=contentDetails&id=${videoId}&key=${API_KEY}`,{headers});
+  return res;
 }

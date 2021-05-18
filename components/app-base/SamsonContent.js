@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet} from 'react-native';
 
 import YoutubeMovable from "../youtube-search/YoutubeMovable";
 import CircumstantialMusic from "../circumstantial-music/CircumstantialMusic";
@@ -11,7 +11,7 @@ import {THEME} from "../../color-theme";
 const SamsonContent = (props) => {
 
   return (
-      <Content scrollEnabled={false} style={styles.content}>
+      <Content scrollEnabled={false}  style={styles.content}>
         <YoutubeMovable ytFrameRef={props.ytFrameRef}/>
         <CircumstantialMusic/>
         <Meeting id={1}/>
@@ -22,6 +22,7 @@ const SamsonContent = (props) => {
 
 const styles = StyleSheet.create({
   content: {
+    height: '80%',
     backgroundColor: THEME.PRIMARY_COLOR,
   }
 });

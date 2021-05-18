@@ -1,35 +1,48 @@
 import React, {useEffect} from 'react';
 import {Animated, StyleSheet} from 'react-native';
-import {useSelector} from "react-redux";
-import {Button, Text, Title, View} from "native-base";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, Icon, Input, Item, Text, Title, View} from "native-base";
 import {useState} from "reinspect";
 import YoutubeSearch from "../youtube-search/YoutubeSearch";
 import {Actions} from "react-native-router-flux";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {THEME} from "../../color-theme";
 import {formatDate, UUID} from "../../utils";
+import actions from "../../actions/actions";
 
-const Overlay = (props) => {
+const EditMeetingScene = (props) => {
   const {onItemSelected, meetingTypeVisible} = props;
   const [opacity, setOpacity] = useState(new Animated.Value(0));
   const [selectedMeetingType, setSelectedMeetingType] = useState(props.data && props.data.meetingType);
   const [selectedVideo, setSelectedVideo] = useState(props.data);
   const [selectedVideoLabel, setSelectedVideoLabel] = useState(`Video: ${props.data ? props.data.title : ''}`);
   const meetingTypes = useSelector(state => state.meetingTypes)
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Animated.timing(opacity, {
       duration: 120,
       toValue: 1,
+      useNativeDriver: true
     }).start();
   }, [])
 
-  const isFormInvalid = () => {
-    if (meetingTypeVisible) {
-      return selectedVideo === null || selectedMeetingType === null;
-    }
-    return selectedVideo === null;
+  const setVideoDuration = (duration) => {
+    selectedVideo.duration = duration;
+    setSelectedVideo(selectedVideo);
+    dispatch(actions.updateDurationForVideo(selectedVideo));
   }
+
+  const setVideoStart = (start) => {
+    selectedVideo.start = start;
+    setSelectedVideo(selectedVideo);
+  }
+
+  const setVideoEnd = (end) => {
+    selectedVideo.end = end;
+    setSelectedVideo(selectedVideo);
+  }
+
 
   const setVideoItem = (video) => {
     const entry = {
@@ -38,14 +51,17 @@ const Overlay = (props) => {
       publishedAt: formatDate(video.snippet.publishedAt),
       channel: video.snippet.channelTitle,
       videoId: video.id.videoId,
-      key: props.data ? props.data.key : UUID()
+      key: props.data ? props.data.key : UUID(),
+      duration: video.duration,
+      start: video.start,
+      end: video.end
     }
-    setSelectedVideoLabel(`Video: ${video.snippet.title}`);
+    setSelectedVideoLabel(`${video.snippet.title}`);
     setSelectedVideo(entry);
   }
   const renderOk = () => {
     return (
-        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, height:39,  justifyContent: 1}}
+        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, height: 39, justifyContent: 1}}
                 onPress={() => onItemSelected({video: selectedVideo, meetingType: selectedMeetingType})}>
           <Text>Ok</Text>
         </Button>
@@ -66,12 +82,18 @@ const Overlay = (props) => {
       <Animated.View style={[styles.container, {opacity: opacity}]}>
         <View style={styles.overlayContent}>
           <View style={styles.content}>
-            <Title style={styles.title}>Add Meeting </Title>
+            <Title style={styles.title}>Add Meeting</Title>
+            <Item>
+              <Input placeholderTextColor={THEME.FILLER_COLOR} style={styles.label} placeholder={selectedVideoLabel}/>
+              <Icon active name='crop-outline' style={{color:THEME.FILLER_COLOR}}
+                    onPress={() => Actions.cropVideo({verticalPercent: 0.45, horizontalPercent: 1, video: selectedVideo, setVideoDuration, setVideoStart, setVideoEnd})}/>
+            </Item>
+
             {meetingTypeVisible && <Text style={styles.label}>Meeting Type</Text> && <DropDownPicker
                 placeholder="Select meeting type"
                 items={meetingTypes}
                 defaultValue={selectedMeetingType}
-                containerStyle={{height: 40, width: '80%', marginBottom: 10,}}
+                containerStyle={{height: 40, width: '100%', marginBottom: 10,}}
                 style={{
                   backgroundColor: THEME.FILLER_COLOR,
                   borderColor: THEME.FILLER_COLOR,
@@ -89,10 +111,9 @@ const Overlay = (props) => {
                   setSelectedMeetingType(item.value)
                 }}
             />}
-            <Text numberOfLines={1} style={styles.label}>{selectedVideoLabel}</Text>
             <YoutubeSearch onVideoSelect={setVideoItem}/>
           </View>
-          <View style={styles.buttons}>
+          <View style= {styles.buttons}>
             {renderClose()}
             {renderOk()}
           </View>
@@ -109,13 +130,13 @@ const styles = StyleSheet.create({
     color: THEME.FILLER_COLOR,
   },
   buttons: {
-    width: '100%',
+    width: '90%',
     flex: 1,
     flexDirection: "row",
     justifyContent: 'space-between',
   },
   content: {
-    width: '100%',
+    width: '80%',
     flexGrow: 2,
     height: '80%',
     alignItems: 'center',
@@ -134,8 +155,8 @@ const styles = StyleSheet.create({
   overlayContent: {
     alignItems: "center",
     backgroundColor: THEME.SECONDARY_COLOR,
-    height: '75%',
-    width: '90%',
+    height: '100%',
+    width: '100%',
     opacity: 1,
     borderRadius: 4
   },
@@ -156,4 +177,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-export default Overlay;
+export default EditMeetingScene;
