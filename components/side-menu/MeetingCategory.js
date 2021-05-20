@@ -2,11 +2,14 @@ import {StyleSheet, View, TouchableOpacity} from "react-native";
 import {Icon, Input, Item, Title} from "native-base";
 import React, {useState} from "react";
 import {THEME} from "../../color-theme";
+import {useSelector} from "react-redux";
 
 export const MeetingCategory = (props) => {
   const {item, save, setSelectedCategory, selected} = props;
   const [name, setName] = useState();
-  return (<View style={[styles.item, {backgroundColor: selected ? THEME.SELECTED : THEME.FILLER_COLOR}]}>
+  const theme = useSelector(state => state.theme)
+
+  return (<View style={[styles.item, {backgroundColor: selected ? theme.SELECTED : theme.FILLER_COLOR}]}>
     {item.isEmpty ? (
             <Item>
               <Input style={{height: '75%'}} placeholder='Category Name' onChangeText={setName}/>

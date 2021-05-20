@@ -63,12 +63,6 @@ const styles = StyleSheet.create({
   },
   minimize: {
     zIndex: 1,
-  },
-  minimizeImage: {
-    right: 0,
-    borderRadius: 3,
-    width: 25, height: 25,
-    backgroundColor: THEME.FILLER_COLOR,
   }
 })
 MovableView.propTypes = {

@@ -10,27 +10,34 @@ import actions from "../../actions/actions";
 
 const SideMenu = (props) => {
   const store = useSelector(state => state);
+  const theme = useSelector(state => state.theme)
+
   const dispatch = useDispatch();
   const [isToggled, setIsToggled] = useState(false);
   const toggleThemeSwitch = (val) =>{
-
     dispatch(actions.setFieldValue({name: 'isLightTheme', value: val}));
+    if(val){
+      dispatch(actions.setFieldValue({name: 'theme', value: THEME_LIGHT}));
+    }else{
+      dispatch(actions.setFieldValue({name: 'theme', value: THEME}));
+
+    }
   }
   return (
 
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: theme.SECONDARY_COLOR}]}>
         <Collapse style={styles.collapsible} onToggle={() => setIsToggled(!isToggled)}>
           <CollapseHeader>
             <View style={styles.header}>
-              <Title style={styles.title}>Categories</Title>
-              <Icon name={isToggled ? 'caret-down' : 'caret-up'} style={{color: THEME.FILLER_COLOR}}/>
+              <Title style={{color: theme.FILLER_COLOR}}>Categories</Title>
+              <Icon name={isToggled ? 'caret-down' : 'caret-up'} style={{color: theme.FILLER_COLOR}}/>
             </View>
           </CollapseHeader>
           <CollapseBody>
             <MeetingCategoryList categories={store.categories}/>
           </CollapseBody>
         </Collapse>
-        <View style={styles.footer}>
+        <View style={[styles.footer, {backgroundColor: theme.FILLER_COLOR}]}>
           <Title>Theme</Title>
           <View style={{width: 8}}/>
           <Switch
@@ -42,12 +49,12 @@ const SideMenu = (props) => {
               circleSize={30}
               barHeight={30}
 
-              backgroundActive={THEME.SELECTED}
-              backgroundInactive={'gray'}
-              circleActiveColor={THEME.SECONDARY_COLOR}
-              circleInActiveColor={THEME.SECONDARY_COLOR}
+              backgroundActive={theme.SELECTED}
+              backgroundInactive={theme.SELECTED}
+              circleActiveColor={theme.SECONDARY_COLOR}
+              circleInActiveColor={theme.SECONDARY_COLOR}
               changeValueImmediately={false}
-               innerCircleStyle={{borderColor: THEME.SECONDARY_COLOR, alignItems: "center", justifyContent: "center"}} // style for inner animated circle for what you (may) be rendering inside the circle
+               innerCircleStyle={{borderColor: theme.SECONDARY_COLOR, alignItems: "center", justifyContent: "center"}} // style for inner animated circle for what you (may) be rendering inside the circle
               outerCircleStyle={{}} // style for outer animated circle
               renderActiveText={true}
               renderInActiveText={true}
@@ -69,9 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row'
   },
-  title: {
-    color: THEME.FILLER_COLOR
-  },
   collapsible: {
     flex: 1,
     flexGrow: 8
@@ -81,7 +85,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: THEME.SECONDARY_COLOR,
   },
   footer: {
     flexDirection: 'row',
@@ -91,7 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 10,
     width: '100%',
-    backgroundColor: THEME.FILLER_COLOR,
   }
 
 });

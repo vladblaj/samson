@@ -13,6 +13,7 @@ const Meeting = (props) => {
     Value,
   } = Animated;
   const id = useSelector(state => state.selectedMeeting)
+  const theme = useSelector(state => state.theme)
   const data = useSelector(state => state.meetings[id])
   const selectedTrack = useSelector(state => state.selectedTrack)
   const editMeeting = useSelector(state => state.editMeeting)
@@ -99,7 +100,7 @@ const Meeting = (props) => {
   };
 
   return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor: theme.PRIMARY_COLOR}]}>
         <DraggableFlatList
             data={data}
             renderItem={renderItem}
@@ -123,7 +124,6 @@ const styles = StyleSheet.create({
     height: 480,
     margin: 5,
     flex: 1,
-    backgroundColor: THEME.PRIMARY_COLOR,
   },
   rowItem: {
     height: 100,

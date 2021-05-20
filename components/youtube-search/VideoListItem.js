@@ -3,8 +3,10 @@ import {ListItem, Title, View} from "native-base";
 import {Image, StyleSheet, Text, TouchableOpacity} from "react-native";
 import {THEME} from "../../color-theme";
 import {formatDate} from "../../utils";
+import {useSelector} from "react-redux";
 
 const VideoListItem = ({video, onVideoSelect}) => {
+  const theme = useSelector(state => state.theme)
 
   // const video = props.video;
   const imageUrl = video.snippet.thumbnails.default.url;
@@ -20,13 +22,13 @@ const VideoListItem = ({video, onVideoSelect}) => {
           </View>
           <View style={styles.mediaBody}>
             <View style={styles.mediaTitle}>
-              <Title numberOfLines={2} style={styles.title}>{video.snippet.title}</Title>
+              <Title numberOfLines={2} style={[styles.title,{color: theme.WHITE}]}>{video.snippet.title}</Title>
             </View>
             <View style={styles.mediaChannelTitle}>
-              <Text style={styles.textDetails}>{video.snippet.channelTitle}</Text>
+              <Text style={{color: theme.WHITE}}>{video.snippet.channelTitle}</Text>
             </View>
             <View style={styles.mediaHeadingChannelDate}>
-              <Text style={styles.textDetails}>{date}</Text>
+              <Text style={{color: theme.WHITE}}>{date}</Text>
             </View>
           </View>
       </TouchableOpacity>
@@ -63,12 +65,7 @@ const styles = StyleSheet.create({
     flexBasis: 20
   },
   title: {
-    color: THEME.WHITE,
     fontWeight: 'bold',
-  },
-  textDetails: {
-    color: THEME.WHITE,
-
   },
   mediaObject: {width: 100, height: 100},
 });

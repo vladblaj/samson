@@ -6,7 +6,6 @@ import {useState} from "reinspect";
 import YoutubeSearch from "../youtube-search/YoutubeSearch";
 import {Actions} from "react-native-router-flux";
 import DropDownPicker from 'react-native-dropdown-picker';
-import {THEME} from "../../color-theme";
 import {formatDate, UUID} from "../../utils";
 import actions from "../../actions/actions";
 
@@ -17,6 +16,8 @@ const EditMeetingScene = (props) => {
   const [selectedVideo, setSelectedVideo] = useState(props.data);
   const [selectedVideoLabel, setSelectedVideoLabel] = useState(`Video: ${props.data ? props.data.title : ''}`);
   const meetingTypes = useSelector(state => state.meetingTypes)
+  const theme = useSelector(state => state.theme)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +44,6 @@ const EditMeetingScene = (props) => {
     setSelectedVideo(selectedVideo);
   }
 
-
   const setVideoItem = (video) => {
     const entry = {
       thumbnail: video.snippet.thumbnails.default.url,
@@ -61,51 +61,64 @@ const EditMeetingScene = (props) => {
   }
   const renderOk = () => {
     return (
-        <Button primary style={{backgroundColor: THEME.SECONDARY_COLOR, width: 90, height: 39, justifyContent: 1}}
+        <Button primary style={{backgroundColor: theme.SECONDARY_COLOR, width: 90, height: 39, justifyContent: 1}}
                 onPress={() => onItemSelected({video: selectedVideo, meetingType: selectedMeetingType})}>
-          <Text>Ok</Text>
+          <Text style={{color:theme.WHITE}} >Ok</Text>
         </Button>
     );
   }
   const renderClose = () => {
     return (
         <Button danger onPress={Actions.pop} style={{
-          backgroundColor: THEME.SECONDARY_COLOR,
+          backgroundColor: theme.SECONDARY_COLOR,
+
           width: 90,
           height: 38,
           justifyContent: 1
-        }}><Text> Cancel </Text></Button>
+        }}><Text style={{color:theme.WHITE}}> Cancel </Text></Button>
     );
   }
 
   return (
       <Animated.View style={[styles.container, {opacity: opacity}]}>
-        <View style={styles.overlayContent}>
+        <View style={[styles.overlayContent, {backgroundColor: theme.SECONDARY_COLOR}]}>
           <View style={styles.content}>
-            <Title style={styles.title}>Add Meeting</Title>
-            <Item>
-              <Input placeholderTextColor={THEME.FILLER_COLOR} style={styles.label} placeholder={selectedVideoLabel}/>
-              <Icon active name='crop-outline' style={{color:THEME.FILLER_COLOR}}
-                    onPress={() => Actions.cropVideo({verticalPercent: 0.45, horizontalPercent: 1, video: selectedVideo, setVideoDuration, setVideoStart, setVideoEnd})}/>
+            <Title style={[styles.title, {color: theme.WHITE}]}>Add Meeting</Title>
+            <Item style={{borderColor: 'transparent'}}>
+              <Input placeholderTextColor={theme.WHITE} style={[styles.label, {borderColor: theme.SECONDARY_COLOR, color: theme.WHITE}]}
+                     placeholder={selectedVideoLabel}/>
+              <Icon active name='crop-outline' style={{color: theme.FILLER_COLOR}}
+                    onPress={() => Actions.cropVideo({
+                      verticalPercent: 0.45,
+                      horizontalPercent: 1,
+                      video: selectedVideo,
+                      setVideoDuration,
+                      setVideoStart,
+                      setVideoEnd
+                    })}/>
             </Item>
 
-            {meetingTypeVisible && <Text style={styles.label}>Meeting Type</Text> && <DropDownPicker
+            {meetingTypeVisible && <Text style={[styles.label, {color: theme.FILLER_COLOR}]}>Meeting Type</Text> &&
+            <DropDownPicker
+                labelStyle={{color: theme.WHITE}}
                 placeholder="Select meeting type"
                 items={meetingTypes}
                 defaultValue={selectedMeetingType}
-                containerStyle={{height: 40, width: '100%', marginBottom: 10,}}
+                containerStyle={{height: 40, width: '100%', marginBottom: 10, color: theme.PRIMARY_COLOR}}
                 style={{
-                  backgroundColor: THEME.FILLER_COLOR,
-                  borderColor: THEME.FILLER_COLOR,
+                  paddingHorizontal: 2,
+
+                  backgroundColor: theme.PRIMARY_COLOR,
+                  borderColor: theme.PRIMARY_COLOR,
+                  borderRadius: 3
                 }}
                 itemStyle={{
-                  color: 'white',
                   justifyContent: 'flex-start',
                 }}
                 dropDownStyle={{
-                  color: 'white',
-                  borderColor: THEME.FILLER_COLOR,
-                  backgroundColor: THEME.FILLER_COLOR,
+                  color: theme.WHITE,
+                  borderColor: theme.PRIMARY_COLOR,
+                  backgroundColor: theme.PRIMARY_COLOR,
                 }}
                 onChangeItem={item => {
                   setSelectedMeetingType(item.value)
@@ -113,7 +126,7 @@ const EditMeetingScene = (props) => {
             />}
             <YoutubeSearch onVideoSelect={setVideoItem}/>
           </View>
-          <View style= {styles.buttons}>
+          <View style={styles.buttons}>
             {renderClose()}
             {renderOk()}
           </View>
@@ -127,13 +140,13 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginRight: 40,
     marginBottom: 10,
-    color: THEME.FILLER_COLOR,
   },
   buttons: {
     width: '90%',
     flex: 1,
     flexDirection: "row",
     justifyContent: 'space-between',
+    marginBottom: 10
   },
   content: {
     width: '80%',
@@ -154,7 +167,6 @@ const styles = StyleSheet.create({
   },
   overlayContent: {
     alignItems: "center",
-    backgroundColor: THEME.SECONDARY_COLOR,
     height: '100%',
     width: '100%',
     opacity: 1,
@@ -163,18 +175,6 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 30,
     marginBottom: 30,
-    color: THEME.FILLER_COLOR,
-  },
-  searchInput: {
-    color: THEME.SECONDARY_COLOR
-  },
-  closeBtnContainer: {
-    width: '100%',
-    color: THEME.SECONDARY_COLOR,
-    paddingTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 10,
-  },
+  }
 });
 export default EditMeetingScene;

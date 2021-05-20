@@ -9,9 +9,8 @@ target 'samson' do
   config = use_native_modules!
 
   use_react_native!(
-   :path => config["reactNativePath"],
-   :hermes_enabled => true
-  )
+   :path => config["reactNativePath"]
+   )
 
   # Uncomment the code below to enable Flipper.
   #

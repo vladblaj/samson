@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Button, Text} from 'native-base';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import {THEME} from "../../color-theme";
+import {useSelector} from "react-redux";
 
 const {height: deviceHeight, width: deviceWidth} = Dimensions.get('window');
 
 const BaseLightBox = (props) => {
-
+  const theme = useSelector(state => state.theme)
   const [opacity, setOpacity] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -37,16 +37,16 @@ const BaseLightBox = (props) => {
     return (
         <View
             style={{
-              borderRadius:10,
+              borderRadius: 10,
               width,
               height,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: THEME.SECONDARY_COLOR,
+              backgroundColor: theme.SECONDARY_COLOR,
             }}>
           {children}
-          <Button style={{alignSelf: 'center', backgroundColor: THEME.SECONDARY_COLOR}}
-                  onPress={closeModal}><Text style={{color:THEME.FILLER_COLOR}}>Close</Text></Button>
+          <Button style={{alignSelf: 'center', backgroundColor: theme.SECONDARY_COLOR}}
+                  onPress={closeModal}><Text style={{color: theme.FILLER_COLOR}}>Close</Text></Button>
         </View>
     );
   };

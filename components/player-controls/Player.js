@@ -7,15 +7,15 @@ import SeekBar from './SeekBar';
 import Controls from './Controls';
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
-import {THEME} from "../../color-theme";
 
 const Player = (props) => {
   const store = useSelector(state => state);
+  const theme = useSelector(state => state.theme);
   const dispatch = useDispatch();
   const [currentPosition, setCurrentPosition] = useState(0);
   const [timer, setTimer] = useState(0);
   const playerRef = props.ytFrameRef;
-  const trackLength = store.selectedTrack?store.selectedTrack.end || store.selectedTrack.duration:1;
+  const trackLength = store.selectedTrack ? store.selectedTrack.end || store.selectedTrack.duration : 1;
   const getVideoStart = () => {
     return store.selectedTrack?.start || 0;
   }
@@ -35,15 +35,21 @@ const Player = (props) => {
   }
 
   const stopFetchingCurrentTime = () => {
+    console.log('will clear interval');
     clearInterval(timer);
   }
 
   useEffect(() => {
+    console.log(store.videoState)
     if (!store.paused && store.videoState === 'ready') {
       console.log('store-ul nu e paused');
       startFetchingCurrentTime();
     }
     if (store.paused) {
+      console.log('WIll delete fetch current time');
+      stopFetchingCurrentTime();
+    }
+    if (store.videoState === 'ready') {
       stopFetchingCurrentTime();
     }
   }, [store.selectedTrack, store.paused, store.videoState])
@@ -55,7 +61,10 @@ const Player = (props) => {
 
   const onSlidingComplete = (time) => {
     seek(time);
-    startFetchingCurrentTime()
+    if (!store.paused) {
+      startFetchingCurrentTime()
+
+    }
   }
 
   const onValueChange = (time) => {
@@ -94,10 +103,10 @@ const Player = (props) => {
   const onSlidingStart = () => {
     stopFetchingCurrentTime();
   }
-  const videoCropped = store.selectedTrack?store.selectedTrack.start || store.selectedTrack.end: false;
+  const videoCropped = store.selectedTrack ? store.selectedTrack.start || store.selectedTrack.end : false;
   return (
 
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: theme.PRIMARY_COLOR}]}>
 
         <StatusBar hidden={true}/>
 
@@ -108,7 +117,9 @@ const Player = (props) => {
             onSlidingStart={onSlidingStart}
             onSlidingComplete={onSlidingComplete}
             onValueChange={onValueChange}
-            currentPosition={currentPosition}/>
+            currentPosition={currentPosition}
+            theme={theme}
+        />
         <Controls
             onPressRepeat={() => dispatch(actions.toggle({name: 'repeatOn'}))}
             repeatOn={store.repeatOn}
@@ -120,7 +131,8 @@ const Player = (props) => {
             onPressPause={onPressPause}
             onBack={onBack}
             onForward={onForward}
-            paused={store.paused}/>
+            paused={store.paused}
+            theme={theme}/>
       </View>
   );
 }
@@ -131,7 +143,6 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     flexWrap: 'nowrap',
-    backgroundColor: THEME.PRIMARY_COLOR,
     height: 270
   },
   audioElement: {

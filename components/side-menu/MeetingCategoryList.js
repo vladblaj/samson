@@ -24,6 +24,8 @@ const DATA = [
 const MeetingCategoryList = (props) => {
   const dispatch = useDispatch();
   const selectedMeeting = useSelector(state => state.selectedMeeting)
+  const theme = useSelector(state => state.theme)
+
   const {categories} = props;
   const renderItem = ({item}) => (
       <MeetingCategory item={item} selected={selectedMeeting===item.id} save={saveCategory} setSelectedCategory={setSelectedCategory}/>
@@ -50,8 +52,8 @@ const MeetingCategoryList = (props) => {
                   renderItem={renderItem}
                   keyExtractor={item => item.id}
         />
-        <View style={styles.controlButtons}>
-          <Button color = {THEME.FILLER_COLOR} onPress={addNewCategory}  small style={{width: 90, justifyContent: 1}}>
+        <View style={[styles.controlButtons,{color: theme.FILLER_COLOR}]}>
+          <Button color = {theme.FILLER_COLOR} onPress={addNewCategory}  small style={{width: 90, justifyContent: 1}}>
             <Text>Add</Text>
           </Button>
           <Button danger onPress={deleteCategory} small  style={{width: 90, justifyContent: 1}}>
@@ -66,7 +68,6 @@ const MeetingCategoryList = (props) => {
 }
 const styles = StyleSheet.create({
   controlButtons: {
-    color: THEME.FILLER_COLOR,
     justifyContent: 'center',
     flexDirection: 'row'
   },

@@ -7,11 +7,12 @@ import Meeting from "../meeting/Meeting";
 import StatusBar from "react-native-web/dist/exports/StatusBar";
 import {Content} from "native-base";
 import {THEME} from "../../color-theme";
+import {useSelector} from "react-redux";
 
 const SamsonContent = (props) => {
-
+  const theme  = useSelector(state => state.theme);
   return (
-      <Content scrollEnabled={false}  style={styles.content}>
+      <Content scrollEnabled={false}  style={[styles.content,{backgroundColor: theme.PRIMARY_COLOR}]}>
         <YoutubeMovable ytFrameRef={props.ytFrameRef}/>
         <CircumstantialMusic/>
         <Meeting id={1}/>
@@ -23,7 +24,6 @@ const SamsonContent = (props) => {
 const styles = StyleSheet.create({
   content: {
     height: '80%',
-    backgroundColor: THEME.PRIMARY_COLOR,
   }
 });
 

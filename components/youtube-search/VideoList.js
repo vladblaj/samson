@@ -13,7 +13,7 @@ const VideoList = props => {
         <FlatList
             data={props.videos}
             renderItem={renderItem}
-            keyExtractor={item => item.key}
+            keyExtractor={item => item.id.videoId}
         />
       </SafeAreaView>
   );

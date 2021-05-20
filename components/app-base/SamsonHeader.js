@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Body, Button, Header, Icon, Left, Right, Text, Title, View} from "native-base";
 import {useDispatch, useSelector} from "react-redux";
-import {THEME} from "../../color-theme";
 import actions from "../../actions/actions";
 import {Actions} from "react-native-router-flux";
 
@@ -10,6 +9,7 @@ const SamsonHeader = () => {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
   const dispatch = useDispatch();
   const editMeeting = useSelector(state => state.editMeeting);
+  const theme = useSelector(state => state.theme);
   const displayEditMeetingControls = () => {
     return (<View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
       <Button small success onPress={() => {
@@ -23,12 +23,12 @@ const SamsonHeader = () => {
       <TouchableOpacity onPress={() => {
         dispatch(actions.setFieldValue({name: 'isYoutubeVisible', value: true}));
       }}>
-        <Icon name={'logo-youtube'} style={{color: THEME.FILLER_COLOR}}/>
+        <Icon name={'logo-youtube'} style={{color: theme.FILLER_COLOR}}/>
       </TouchableOpacity></View>)
   }
 
   return (
-      <Header style={styles.header}>
+      <Header style={{backgroundColor: theme.PRIMARY_COLOR}}>
         <Left>
           <Button transparent onPress={() => {
             if (isDrawerOpened) {
@@ -39,11 +39,11 @@ const SamsonHeader = () => {
             }
             setIsDrawerOpened(!isDrawerOpened);
           }}>
-            <Icon style={{color: THEME.FILLER_COLOR}} name='menu' />
+            <Icon style={{color: theme.FILLER_COLOR}} name='menu' />
           </Button>
         </Left>
         <Body>
-          <Title style={{color: THEME.FILLER_COLOR}}>Samson</Title>
+          <Title style={{color: theme.WHITE}}>Samson</Title>
         </Body>
         <Right>
           {editMeeting ? displayEditMeetingControls() : displayYoutubeIcon()}
@@ -58,20 +58,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexBasis: 0,
   },
-  header: {
-    backgroundColor: THEME.PRIMARY_COLOR,
-  },
   maximize: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 28, height: 28,
     borderRadius: 3
-  },
-  maximizeImage: {
-    right: 0,
-    borderRadius: 3,
-    width: 30, height: 25,
-    backgroundColor: THEME.FILLER_COLOR,
   }
 });
 

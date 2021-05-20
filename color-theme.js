@@ -1,10 +1,10 @@
 export let THEME_LIGHT= {
   PRIMARY_COLOR: '#f6f6f6',
-  SECONDARY_COLOR: '#ffbb91',
-  SELECTED: '#5fa97a',
-  NEUTRAL_COLOR: '#ff8e6e',
+  SECONDARY_COLOR: '#bcc7e9',
+  SELECTED: '#3c58a0',
+  NEUTRAL_COLOR: '#1e56a0',
   FILLER_COLOR: '#515070',
-  WHITE:  '#ffffff'
+  WHITE:  '#151414'
 }
 
 export const THEME = {
@@ -14,6 +14,15 @@ export const THEME = {
   NEUTRAL_COLOR: '#3282b8',
   FILLER_COLOR: '#bbe1fa',
   WHITE:  '#ffffff'
+}
+
+export let THEME_LIGHT_BACKUP= {
+  PRIMARY_COLOR: '#f6f6f6',
+  SECONDARY_COLOR: '#ffbb91',
+  SELECTED: '#5fa97a',
+  NEUTRAL_COLOR: '#ff8e6e',
+  FILLER_COLOR: '#515070',
+  WHITE:  '#515070'
 }
 
 

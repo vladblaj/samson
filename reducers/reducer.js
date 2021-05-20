@@ -15,7 +15,6 @@ import {
   UPDATE_DURATION_FOR_VIDEO
 } from "./actionConstants";
 import {UUID} from "../utils";
-import {THEME} from "../color-theme";
 
 const mockItem = {
   "kind": "youtube#searchResult",
@@ -88,7 +87,14 @@ export const initialState = {
     {label: 'PGM or A/PGM Admission', value: 'PGM or A/PGM Admission'},
     {label: 'In Memoriam', value: 'In Memoriam'},
   ],
-  theme: THEME
+  theme: {
+    PRIMARY_COLOR: '#1b262c',
+    SECONDARY_COLOR: '#0f4c75',
+    SELECTED: '#d6ab12',
+    NEUTRAL_COLOR: '#3282b8',
+    FILLER_COLOR: '#bbe1fa',
+    WHITE: '#ffffff'
+  }
 }
 const randomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -171,7 +177,7 @@ const playPrevious = (state) => {
 
 }
 const reducer = (state = initialState, action) => {
-  console.log('Action:',action.type);
+  console.log('Action:', action.type);
   switch (action.type) {
     case SET_FIELD_VALUE:
       return {...state, [action.payload.name]: action.payload.value};
@@ -273,7 +279,7 @@ const reducer = (state = initialState, action) => {
     case DELETE_SELECTED_CATEGORY: {
       return {
         ...state,
-        paused:true,
+        paused: true,
         categories: state.categories.filter(category => category.id !== state.selectedMeeting),
         selectedMeeting: state.categories.length >= 1 ? state.categories[0].id : null
       }
@@ -283,7 +289,7 @@ const reducer = (state = initialState, action) => {
       const currentCategory = state.categories.find(cat => cat.id === state.selectedMeeting);
       return {
         ...state,
-        paused:true,
+        paused: true,
         categories: [...state.categories, {id: newId, name: currentCategory.name}],
         meetings: {...state.meetings, [newId]: state.meetings[state.selectedMeeting]},
         selectedMeeting: newId
@@ -293,9 +299,8 @@ const reducer = (state = initialState, action) => {
       const currentMeeting = JSON.parse(JSON.stringify(state.meetings[state.selectedMeeting]));
       const currentTracks = JSON.parse(JSON.stringify(state.tracks));
       const selectedTrack = JSON.parse(JSON.stringify(state.selectedTrack));
-      if(selectedTrack)
-      {
-        if(selectedTrack.videoId === action.payload.videoId){
+      if (selectedTrack) {
+        if (selectedTrack.videoId === action.payload.videoId) {
           selectedTrack.duration = action.payload.duration;
         }
       }

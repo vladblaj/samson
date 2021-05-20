@@ -3,7 +3,6 @@ import {Animated, Image, StyleSheet, Text, TouchableOpacity} from "react-native"
 import React from "react";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Icon, Thumbnail, Title, View} from "native-base";
-import {THEME} from "../../color-theme";
 import {useDispatch, useSelector} from "react-redux";
 import actions from "../../actions/actions";
 import {useRotateAnimation} from "./useRotateHook";
@@ -18,6 +17,7 @@ const MeetingCard = ({
 }) => {
   const dispatch = useDispatch();
   const editMeeting = useSelector(state => state.editMeeting)
+  const theme = useSelector(state => state.theme)
 
   const [translation, rotation] = useRotateAnimation(editMeeting)
   const newCard = () => {
@@ -29,7 +29,7 @@ const MeetingCard = ({
     return <View>
       <Grid>
         <Col style={styles.meetingName}>
-          <Title numberOfLines={4} style={styles.meetingNameText}>{video.meetingType}</Title>
+          <Title numberOfLines={4} style={[styles.meetingNameText,{color: theme.WHITE }]}>{video.meetingType}</Title>
         </Col>
         <Col style={{width: '25%'}}>
           <View style={styles.thumbnail}>
@@ -40,9 +40,9 @@ const MeetingCard = ({
         <Col style={{width: '35%'}}>
           <Row>
             <View style={styles.mediaBody}>
-              <Title numberOfLines={2} style={styles.title}>{video.title}</Title>
-              <Text style={styles.textDetails}>{video.channel}</Text>
-              <Text style={styles.textDetails}>{video.publishedAt}</Text>
+              <Title numberOfLines={2} style={[styles.title,{color: theme.WHITE}]}>{video.title}</Title>
+              <Text style={{color: theme.WHITE}}>{video.channel}</Text>
+              <Text style={{color: theme.WHITE}}>{video.publishedAt}</Text>
             </View>
           </Row>
         </Col>
@@ -50,14 +50,14 @@ const MeetingCard = ({
     </View>
   }
   const getBackgroundColor = () => {
-    return video && selectedTrack && video.key === selectedTrack.key ? THEME.SELECTED
-        : THEME.NEUTRAL_COLOR
+    return video && selectedTrack && video.key === selectedTrack.key ? theme.SELECTED
+        : theme.NEUTRAL_COLOR
   }
   const removeMeetingCard = () => {
     dispatch(actions.removeMeetingCard({key: video.key}))
   }
   return (
-      <TouchableOpacity style={styles.rowItem} onLongPress={onLongClick}
+      <TouchableOpacity style={[styles.rowItem, {backgroundColor: theme.PRIMARY_COLOR}]} onLongPress={onLongClick}
                         onPress={onClick}>
         <Animated.View
             style={{
@@ -95,11 +95,9 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   meetingNameText: {
-    color: THEME.WHITE,
     fontSize: 16
   },
   rowItem: {
-    backgroundColor: THEME.PRIMARY_COLOR,
     height: 100,
     width: '100%',
   },
@@ -143,13 +141,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flexGrow: 1,
     flexBasis: 20
-  },
-
-  title: {
-    color: THEME.WHITE,
-  },
-  textDetails: {
-    color: THEME.WHITE,
-
-  },
+  }
 });

@@ -6,7 +6,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import {getYoutubeVideoDuration} from "../../api/YoutubeApi";
 import {minutesAndSeconds, youtubeDurationToSeconds} from "../../utils";
 import actions from "../../actions/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {getYoutubeMeta} from 'react-native-youtube-iframe';
 
@@ -16,6 +16,7 @@ const CropVideoOverlay = ({verticalPercent, horizontalPercent, video, setVideoDu
   const dispatch = useDispatch();
   const [duration, setDuration] = useState(video.duration)
   const [playerState, setPlayerState] = useState();
+  const theme  = useSelector(state => state.theme);
 
   useEffect(() => {
     if (!video.duration) {
@@ -49,7 +50,7 @@ const CropVideoOverlay = ({verticalPercent, horizontalPercent, video, setVideoDu
   }
   return (
       <BaseLightBox  verticalPercent={verticalPercent} horizontalPercent={horizontalPercent}>
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor: theme.SECONDARY_COLOR}]}>
           <YoutubePlayer
               onChangeState={setPlayerState}
               ref={frameRef}
@@ -58,11 +59,11 @@ const CropVideoOverlay = ({verticalPercent, horizontalPercent, video, setVideoDu
               videoId={video.videoId}
           />
           <View style={{flexDirection: 'row'}}>
-            <Text style={styles.text}>
+            <Text style={[styles.text,{color: theme.FILLER_COLOR}]}>
               {minutesAndSeconds(video.start?video.start:0)}
             </Text>
             <View style={{flex: 1}}/>
-            <Text style={[styles.text, {width: 70}]}>
+            <Text style={[styles.text, {width: 70, color: theme.FILLER_COLOR}]}>
               {minutesAndSeconds(video.end?video.end:duration)}
             </Text>
           </View>
@@ -74,7 +75,7 @@ const CropVideoOverlay = ({verticalPercent, horizontalPercent, video, setVideoDu
                 slipDisplacement: 40,
               }}
               selectedStyle={{
-                backgroundColor: THEME.SELECTED,
+                backgroundColor: theme.SELECTED,
               }}
               unselectedStyle={{
                 backgroundColor: 'silver',
@@ -98,9 +99,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     flex: 1,
-    backgroundColor: THEME.SECONDARY_COLOR,
   },
-  text: {margin: 6, color: THEME.FILLER_COLOR},
+  text: {margin: 6},
 });
 
 export default CropVideoOverlay
