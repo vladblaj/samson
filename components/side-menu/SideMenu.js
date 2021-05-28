@@ -29,7 +29,7 @@ const SideMenu = (props) => {
         <Collapse style={styles.collapsible} onToggle={() => setIsToggled(!isToggled)}>
           <CollapseHeader>
             <View style={styles.header}>
-              <Title style={{color: theme.FILLER_COLOR}}>Categories</Title>
+              <Title style={{color: theme.FILLER_COLOR}}>Ceremonies</Title>
               <Icon name={isToggled ? 'caret-down' : 'caret-up'} style={{color: theme.FILLER_COLOR}}/>
             </View>
           </CollapseHeader>

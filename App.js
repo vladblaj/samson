@@ -15,6 +15,7 @@ LogBox.ignoreLogs(['Deprecation in \'createStackNavigator\':', 'Deprecation in \
   'startLoadWithResult invoked with invalid lockIdentifier:',
   'Error evaluating injectedJavaScript: This is possibly due to an unsupported return type.',
   'Animated: `useNativeDriver` was not specified.']);
+LogBox.ignoreAllLogs();
 export default function App() {
   return (
       <Router navBar={SamsonHeader}>

@@ -76,7 +76,7 @@ const MeetingCard = ({
             }}>
 
           {video.addNewCard ? newCard() : normalCard()}
-          {editMeeting && <TouchableOpacity
+          {editMeeting && !video.addNewCard  && <TouchableOpacity
               style={{alignSelf: 'flex-end', position: 'absolute', top: -2, right: -2}}>
             <Icon style={{color: 'rgb(47,52,55)'}} name={'remove-circle'}
                   onPress={removeMeetingCard}/></TouchableOpacity>}

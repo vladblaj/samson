@@ -301,17 +301,17 @@ const reducer = (state = initialState, action) => {
       const selectedTrack = JSON.parse(JSON.stringify(state.selectedTrack));
       if (selectedTrack) {
         if (selectedTrack.videoId === action.payload.videoId) {
-          selectedTrack.duration = action.payload.duration;
+          selectedTrack.duration = Math.floor(action.payload.duration);
         }
       }
       currentMeeting.forEach(video => {
         if (video.videoId === action.payload.videoId) {
-          video.duration = action.payload.duration
+          video.duration = Math.floor(action.payload.duration)
         }
       });
       currentTracks.forEach(video => {
         if (video.videoId === action.payload.videoId) {
-          video.duration = action.payload.duration
+          video.duration = Math.floor(action.payload.duration)
         }
       });
       return {

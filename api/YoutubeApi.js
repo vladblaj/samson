@@ -31,9 +31,9 @@ export const getYoutubeSearchResults = async (searchString) => {
   console.log(`MOck Data is: ${searchString}`)
   console.log(`URL IS: ${baseURL}${version}${search_youtube}?videoEmbeddable=true&type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`)
 
-  //const res = await axios.get(`${baseURL}${version}${search_youtube}?videoEmbeddable=true&type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`,{headers});
-  //console.log(res);
-  return mockYoutubeList;
+  const res = await axios.get(`${baseURL}${version}${search_youtube}?videoEmbeddable=true&type=video&part=snippet&q=${encodedSearchString}&key=${API_KEY}`,{headers});
+  console.log(res);
+  return res;
 }
 
 export const getYoutubeVideoDuration = async (videoId) => {

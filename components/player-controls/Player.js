@@ -15,14 +15,15 @@ const Player = (props) => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [timer, setTimer] = useState(0);
   const playerRef = props.ytFrameRef;
-  const trackLength = store.selectedTrack ? store.selectedTrack.end || store.selectedTrack.duration : 1;
+  const trackLength = store.selectedTrack ?store.selectedTrack.end || store.selectedTrack.duration : 1;
   const getVideoStart = () => {
     return store.selectedTrack?.start || 0;
   }
   const videoStart = getVideoStart();
   const fetchCurrentTime = async () => {
-    console.log('will fetch current time');
+
     const currentTime = await playerRef.current?.getCurrentTime();
+    console.log('will fetch current time', currentTime, trackLength);
     setCurrentPositionBounded(currentTime);
   }
 
@@ -53,6 +54,14 @@ const Player = (props) => {
       stopFetchingCurrentTime();
     }
   }, [store.selectedTrack, store.paused, store.videoState])
+
+  useEffect(() => {
+    if(currentPosition === trackLength && store.videoState==='ready')
+    {
+      setTimeout(()=>dispatch(actions.playNext()) , 1500);
+    }
+  }, [currentPosition])
+
   const seek = (time) => {
     time = Math.round(time);
     setCurrentPositionBounded(time);

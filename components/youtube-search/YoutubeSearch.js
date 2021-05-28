@@ -10,7 +10,7 @@ const YoutubeSearch = props => {
 
   const [videos, setVideos] = useState([]);
   const [searchTerm, setSearchTerm] = useState(null);
-  const onChangeSearchTerm = useCallback(debounce((value)=>value? searchOnYoutube(value) : null, 3000), []);
+  const onChangeSearchTerm = useCallback(debounce((value)=>value? searchOnYoutube(value) : null, 2000), []);
   const theme = useSelector(state => state.theme)
 
   const searchOnYoutube = async (term) => {

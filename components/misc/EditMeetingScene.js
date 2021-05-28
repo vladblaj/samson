@@ -101,7 +101,7 @@ const EditMeetingScene = (props) => {
             {meetingTypeVisible && <Text style={[styles.label, {color: theme.FILLER_COLOR}]}>Meeting Type</Text> &&
             <DropDownPicker
                 labelStyle={{color: theme.WHITE}}
-                placeholder="Select meeting type"
+                placeholder="Select meeting section"
                 items={meetingTypes}
                 defaultValue={selectedMeetingType}
                 containerStyle={{height: 40, width: '100%', marginBottom: 10, color: theme.PRIMARY_COLOR}}
